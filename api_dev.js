@@ -1,14 +1,17 @@
 /**
- * mapbar_api_dev.js
+ * 开发版
  *
- * Copyleft 2011, MAPAPI.ORG
+ * Copyleft 2011, AWEBGIS.COM
  * Released under LGPL License.
  *
- * License: http://mapapi.org/license
+ * License: http://www.awebgis.com/license
  *
  * This file should only be used while developing MapApi 
  * This file loads the js files from classes instead of a merged copy.
+ * 
+ * Version: $Id$
  */
+
 (function(){
 	var i,flag = false, nl = document.getElementsByTagName('script'), base, src, p, li, query = '', it, scripts = [] ,_script;
 	
