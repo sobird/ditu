@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>地图API 开发环境</title>
 
-<script type="text/javascript" src="api_dev.js?debug=true"></script>
+<script type="text/javascript" src="api_latest.js?debug=true"></script>
 
 </head>
 <body>
@@ -12,23 +12,7 @@
 <div id="tester" style="width:600px;height:350px;background:#ddd; position:absolute; overflow:hidden;"></div>
 
 <script type="text/javascript">
-var container = document.getElementById('tester');
-var maplet = new com.Maplet(container);
-var point = new com.Point('120.15689','35.96333');
 
-maplet.centerAndZoom(point,8)
-
-var layerMgr = new com.LayerManager(maplet);
-var layer2    = new com.TileLayer();
-
-container.onclick = function(event){
-	
-}
-//layer2.showTile();
-
-layerMgr.addLayer(layer2);
-
-console.log(container.documentElement);
 </script>
 </body>
 </html>
