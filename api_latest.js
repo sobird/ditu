@@ -101,22 +101,68 @@ com.helper = {
 		for (i = 1, l = a.length; i < l; i++) {
 			e = a[i];
 
-			com.helper.each(e, function(v, n) {
+			this.each(e, function(v, n) {
 				if (v !== undefined)
 					o[n] = v;
 			});
 		}
 
 		return o;
+	},
+	
+	/**
+	 * 创建命名空间
+	 */
+	createNamespace : function(n,o){
+		var i, v;
+
+		o = o || window;
+
+		n = n.split('.');
+		for (i=0; i<n.length; i++) {
+			v = n[i];
+
+			if (!o[v])
+				o[v] = {};
+
+			o = o[v];
+		}
+
+		return o;
+	},
+	
+	/**
+	 * 创建一个类
+	 */
+	createClass : function(name,body,namespace){
+		var p, ns;
+		
+		p = /^((static) )?([\w.]+)( extends ([\w.]+))?/.exec(name);
+		console.log(p);
+		cn = p[3].match(/(^|\.)(\w+)$/i)[2];
+		console.log(cn);
+		ns = p[3].replace(/\.\w+$/, '');
+		console.log(ns);
+		ns = cn == ns?(namespace || window):ns;
+		console.log(ns);
+		ns = this.createNamespace(ns);
+		//如果所要创建的类已经存在，则返回
+		if(ns[cn]){
+			return;
+		}
 	}
 }
 
-com.create = function(namespace){
-	
-}
-s = /^((static) )?([\w.]+)(:([\w.]+))?/.exec('com.test.hhh')
-console.log(s);
+com.helper.createClass('static com.map.Map extends ditu',{},'com.DITU');
 
+/**
+ * 切片生成核心规则
+ * 
+ * @param lng
+ * @param lat
+ * @param level
+ * @returns {___anonymous2224_2240}
+ */
 function tilenum(lng,lat,level){
 	var x = Math.floor(((lng+180)/360)*Math.pow(2,level));
 	
