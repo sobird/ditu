@@ -142,18 +142,18 @@ com.helper = {
 		var part, namespace, classname, extendclass, construct, haveConstruct = false;
 		
 		part = /^((static) )?([\w.]+)( extends ([\w.]+))?/.exec(name);
-		console.log(part);
+		//console.log(part);
 		
 		//classname 类名称
 		classname = part[3].match(/(^|\.)(\w+)$/i)[2];
-		console.log(classname);
+		//console.log(classname);
 		
 		//类命名空间
 		namespace = part[3].replace(/\.\w+$/, '');
-		console.log(namespace);
+		//console.log(namespace);
 		
 		namespace = classname == namespace?'':namespace;
-		console.log(namespace);
+		//console.log(namespace);
 		
 		namespace = this.createNamespace(namespace,root);
 		console.log(namespace);
@@ -258,7 +258,7 @@ com.helper = {
 		var list = com.static['firstLetterUpperList'];
 		return list[string] || (list[string] = string.substr(0, 1).toUpperCase() + string.substr(1));
 	}
-}//com.helper : END
+};//com.helper : END
 
 //扩展javascript的Function原型
 com.helper.extend(Function.prototype,{
@@ -472,36 +472,73 @@ com.createClass('com.BaseClass.MVCObject',{
 
 
 var mvc = new com.BaseClass.MVCObject();
-console.log(mvc.bindTo('name'));
+//console.log(mvc.bindTo('name'));
 
 
 
 
 
+com.BaseClass.MVCObject.name = 'test';
+
+com.createClass('com.maps.Map extends com.BaseClass.MVCObject',{
+	Map:function(){
+		this.name = 'test';
+	},
+	get:function(){
+		alert('test');
+	}
+});
+
+var ttt = new com.maps.Map();
+ttt.get();
+console.log(ttt);
 
 
 
+(function(){
+	var k = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 * 此类是不透明的。它没有方法和构造函数。
+	 * 此类的实例从 addListener()、addDomListener() 返回，并最终传递回 removeListener()。
+	 * 
+	 * @return MapsEventListener
+	 */
+	com.createClass('MapsEventListener',{
+		MapsEventListener : function(target, eventName, handler, type) {
+	        this.target = target;
+	        this.eventName = eventName;
+	        this.handler = handler;
+	        this.type = type;
+	        this.bindHandler = null;
+	        this.id = k++;
+	        r(target, eventName)[this.id] = this;
+	        if (Util.Browser().ie) {//如果是IE浏览器
+	        	Event.listeners[this.id] = this;
+	        }
+	    },
+	    remove: function() {
+	        if (this.target) {
+	            switch (this.type) {
+	            case 1:
+	                this.target.removeEventListener(this.eventName, this.handler, false);
+	                break;
+	            case 4:
+	                this.target.removeEventListener(this.eventName, this.handler, true);
+	                break;
+	            case 2:
+	                this.target.detachEvent("on" + this.eventName, this.bindHandler);
+	                break;
+	            case 3:
+	                this.target["on" + this.eventName] = null
+	            }
+	            delete r(this.target, this.eventName)[this.id];
+	            delete Event.listeners[this.id];
+	            this.target = this.handler = null
+	        }
+	    }
+	})
+})();
 
 
 
