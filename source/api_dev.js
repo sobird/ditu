@@ -9,7 +9,7 @@
  * This file should only be used while developing MapApi 
  * This file loads the js files from classes instead of a merged copy.
  * 
- * Version: $Id$
+ * Version: $Id: api_dev.js 3 2011-08-18 14:29:14Z crossyou $
  */
 
 (function(){
