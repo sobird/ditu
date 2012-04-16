@@ -64,14 +64,12 @@
 	    get: function(key) {
 	        var i, value = null;
 	        if ((i = this._indexOf(key)) !== -1) {
-	        	alert(i + 1);
 	            value = this._my_array.at(i + 1);
 	        }
 	        return value;
 	    },
 	    set: function(key, value) {
 	        var i;
-	        alert(this._indexOf(key));
 	        if ((i = this._indexOf(key)) !== -1) {
 	            this._my_array[i + 1] = value;
 	        } else {
@@ -105,7 +103,7 @@
 
 	var test = new AAA(5);
 	test.set('testdd','aaaa');
-	alert(test.get('test'));
+
 	console.log(test);
 
 	function OP_Array(){
@@ -113,6 +111,8 @@
 	};
 
 	OP_Array.prototype = {
+		_my_array: null,
+		_index: 0,
 		enqueue: function(obj) {
 	        this._my_array.push(obj);
 	    },
@@ -150,6 +150,10 @@
 		this._mvc_array_two = new AAA();
 	}
 	Controller.prototype = {
+		_mvc_array_one: null,
+		_14: null,
+		_mvc_array_two: null,
+
 		//注册事件句柄
 		registerEventHandler: function(eventName, handler) {
             var handlerList;
@@ -167,53 +171,33 @@
         	//进入队列
 			this._14.enqueue(event);
             if (!this.dispatchTimer_) {
-				this.dispatchTimer_ = QQMapImpl.util.setTimeout(this.dispatchEvent, QQMapImpl._aab._aabc, this)
+				this.dispatchTimer_ = __setTimeout(this.dispatchEvent, 10, this);
 			}
         },
 
         //派遣事件
-        dispatchEvent: function(this_) {
-            this_.dispatchTimer_ = null;
+        dispatchEvent: function(_self) {
+            _self.dispatchTimer_ = null;
             var event, handlerList, handlerListLength, listenerList;
             var listenerListLength, i, renderEvent = null;
             var zoomLevelChangedEvent = null;
             var bOptimalRenderEvent = false;
-            while (!this_._14.empty()) {
-                event = this_._14.dequeue();
+            while (!_self._14.empty()) {
+                event = _self._14.dequeue();
                 if (event.eventType === "Render") {
                     if (event.isOptimal) {
                         bOptimalRenderEvent = true
                     }
                     renderEvent = event;
                     continue
-                } else if (event.eventType === "ZoomLevelChanged") {}
-                if ((handlerList = this_._6.get(event.eventType)) !== null) {
+                }
+
+                if ((handlerList = _self._mvc_array_one.get(event.eventType)) !== null) {
                     handlerListLength = handlerList.length();
                     for (i = 0; i < handlerListLength; ++i) {
                         switch (event.eventType) {
                         case "TileGridReInit":
                             handlerList.at(i).onTileGridReInit(event);
-                            break;
-                        case "ThemeChanged":
-                            handlerList.at(i).onThemeChanged(event);
-                            break;
-                        case "ContextMenuItemAdded":
-                            handlerList.at(i).onContextMenuItemAdded(event);
-                            break;
-                        case "QOverlayAdded":
-                            handlerList.at(i).onQOverlayAdded(event);
-                            break;
-                        case "QOverlayModified":
-                            handlerList.at(i).onQOverlayModified(event);
-                            break;
-                        case "QOverlayMoved":
-                            handlerList.at(i).onQOverlayMoved(event);
-                            break;
-                        case "QOverlayRemoved":
-                            handlerList.at(i).onQOverlayRemoved(event);
-                            break;
-                        case "QOverlaysCleared":
-                            handlerList.at(i).onQOverlaysCleared(event);
                             break;
                         default:
                             break
@@ -223,7 +207,7 @@
             }
             if (renderEvent !== null) {
                 renderEvent.isOptimal = bOptimalRenderEvent;
-                if ((handlerList = this_._6.get(renderEvent.eventType)) !== null) {
+                if ((handlerList = _self._mvc_array_one.get(renderEvent.eventType)) !== null) {
                     handlerListLength = handlerList.length();
                     for (i = 0; i < handlerListLength; ++i) {
                         handlerList.at(i).onRender(renderEvent)
@@ -265,37 +249,40 @@
 	};
 
 	var controller = new Controller();
+	controller.registerEventHandler('TileGridReInit',function(e){
+		console.log(e);
+	});
 
+	controller.triggerEvent('TileGridReInit');
 	console.log(controller);
 
-	/*
+	//模型类, 模型需要用户根据需求自定义
 	function Model (mvc) {
 		this.mvc = mvc;
-        this.model_ = new QViewMgrModel();
-        this.tileGrid = new _a._ac._aco();
-        this._2 = new MyArray();
-        this.qOverlayChangeList = new MyArray();
-        this.qContextMenuItemList = new MyArray();
-        this.qControlList = new MyArray();
-        this.qOverlayCount = 0;
-        this._19 = new _a._ac._acl(this.mvc);
-        this.initAllDisplayBBox();
-        mvc = null
+        //this.model_ = new QViewMgrModel(); MVCObject
 	};
 
 	Model.prototype = {
 
 	}
 
-	function MVC(){
-		this.model = new _a._ac.Model(this);
-		this.controller = new _a._ab.Controller(this);
-		this.view = new _a._ad.View(this, container);
+	function View (mvc, container) {
+		this.mvc = mvc;
+	}
+	View.prototype = {
+
+	};
+
+	//Javascript MVC架构
+	function MVC(container){
+		this.controller = new Controller(this);
+		this.model = new Model(this);
+		this.view = new View(this, container);
 
 		//注册MVC监听事件句柄
 		this.controller.registerEventHandler("ViewSizeChanged", this.model);
 
-		//垃圾回收
+		//垃圾回收标记
 		var _self = this;
 		EventUtil.addDomListener(window, 'unload',function() {
 			_self.model = null;
@@ -307,11 +294,29 @@
 		triggerEvent: function(event) {
 			this.controller.triggerEvent(event)
 		},
-		addEventListener: function(eventName, callback) {
-			return this.controller.addEventListener(eventName, callback)
+		addEventListener: function(eventName, handler) {
+			return this.controller.addEventListener(eventName, handler)
 		},
 		removeEventListener: function(eventListener) {
 			this.controller.removeEventListener(eventListener)
 		}
-	}*/
+	}
+
+	// some helper function 
+	function __setTimeout(handler, delay) {
+        var _timeout = window.setTimeout, argu, f;
+        if (typeof(handler) === "function") {
+            argu = Array.prototype.slice.call(arguments, 2);
+            f = (function() {
+                handler.apply(null, argu);
+            });
+            return _timeout(f, delay);
+        }
+        return _timeout(handler, delay);
+    };
+
+    //test script 
+
+    var mvc = new MVC(document.getElementById('tester'));
+
 })();
