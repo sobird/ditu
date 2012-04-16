@@ -144,141 +144,79 @@
 
 	var QQMapImpl._aad = function(){
 
-	}
+	}*/
 	//
 	function Controller(mvc){
 		this.mvc = mvc;
-		this._6 = new AAA();
+		this._mvc_array_one = new AAA();
 		this._14 = new QQMapImpl._aae();
-		this._7 = new AAA();
+		this._mvc_array_two = new AAA();
 	}
 	Controller.prototype = {
-		registerEventHandler: function(eventName, eventHandler) {
+		//注册事件句柄
+		registerEventHandler: function(eventName, handler) {
             var handlerList;
-            if ((handlerList = this._6.get(eventName)) !== null) {
-                handlerList.push(eventHandler)
+            if ((handlerList = this._mvc_array_one.get(eventName)) !== null) {
+                handlerList.push(handler);
             } else {
                 handlerList = new MyArray();
-                handlerList.push(eventHandler);
-                this._6.set(eventName, handlerList)
+                handlerList.push(handler);
+                this._mvc_array_one.set(eventName, handlerList);
             }
-            eventName = null;
-            eventHandler = null;
-            handlerList = null
         },
-        triggerEvent: function(qevent) {
-            var handlerList, listenerList, i;
-            var handlerListLength, listenerListLength;
-            switch (qevent.eventType) {
-            case 'ViewSizeChanged':
-                if ((handlerList = this._6.get(qevent.eventType)) !== null) {
-                    handlerListLength = handlerList.length();
-                    for (i = 0; i < handlerListLength; ++i) {
-                        handlerList.at(i).onViewSizeChanged(qevent)
-                    }
-                }
-                if ((listenerList = this._7.get('bounds_changed')) !== null) {
-                    listenerListLength = listenerList.length();
-                    for (i = 0; i < listenerListLength; ++i) {
-                        listenerList.at(i).apply(null, [])
-                    }
-                }
-                break;
-            case 'CenterChanged':
-                QQMapImpl.util.centerChangedFixDisplayBBox(qevent, this.mvc.model.displayBBox);
-                if ((handlerList = this._6.get(qevent.eventType)) !== null) {
-                    handlerListLength = handlerList.length();
-                    for (i = 0; i < handlerListLength; ++i) {
-                        handlerList.at(i).onCenterChanged(qevent)
-                    }
-                }
-                if ((listenerList = this._7.get('center_changed')) !== null) {
-                    listenerListLength = listenerList.length();
-                    for (i = 0; i < listenerListLength; ++i) {
-                        listenerList.at(i).apply(null, [])
-                    }
-                }
-                break;
-            case 'ZoomLevelChanged':
-                if ((handlerList = this._6.get(qevent.eventType)) !== null) {
-                    if (qevent.zoomLevel === undefined || qevent.zoomLevel === null) {
-                        qevent.zoomLevel = this.mvc.model.tileGrid.get('zoom') + qevent.deltaZoomLevel
-                    }
-                    if (this.mvc.model.zmin !== null) {
-                        if (qevent.zoomLevel < this.mvc.model.zmin) {
-                            qevent.zoomLevel = this.mvc.model.zmin
-                        } else if (qevent.zoomLevel > this.mvc.model.zmax) {
-                            qevent.zoomLevel = this.mvc.model.zmax
-                        }
-                    }
-                    handlerListLength = handlerList.length();
-                    for (i = 0; i < handlerListLength; ++i) {
-                        handlerList.at(i).onZoomLevelChanged(qevent)
-                    }
-                }
-                if ((listenerList = this._7.get('zoom_changed')) !== null) {
-                    listenerListLength = listenerList.length();
-                    for (i = 0; i < listenerListLength; ++i) {
-                        listenerList.at(i).apply(null, [])
-                    }
-                }
-                break;
-            default:
-                this._14.enqueue(qevent);
-                if (!this.dispatchTimer_) {
-                    this.dispatchTimer_ = QQMapImpl.util.setTimeout(this.dispatchEvent, QQMapImpl._aab._aabc, this)
-                }
-                break
-            }
-            qevent = null;
-            handlerList = null;
-            listenerList = null;
-            i = null;
-            handlerListLength = null;
-            listenerListLength = null
+
+        //触发事件
+        triggerEvent: function(event) {
+        	//进入队列
+			this._14.enqueue(event);
+            if (!this.dispatchTimer_) {
+				this.dispatchTimer_ = QQMapImpl.util.setTimeout(this.dispatchEvent, QQMapImpl._aab._aabc, this)
+			}
         },
+
+        //派遣事件
         dispatchEvent: function(this_) {
             this_.dispatchTimer_ = null;
-            var qevent, handlerList, handlerListLength, listenerList;
+            var event, handlerList, handlerListLength, listenerList;
             var listenerListLength, i, renderEvent = null;
             var zoomLevelChangedEvent = null;
             var bOptimalRenderEvent = false;
             while (!this_._14.empty()) {
-                qevent = this_._14.dequeue();
-                if (qevent.eventType === "Render") {
-                    if (qevent.isOptimal) {
+                event = this_._14.dequeue();
+                if (event.eventType === "Render") {
+                    if (event.isOptimal) {
                         bOptimalRenderEvent = true
                     }
-                    renderEvent = qevent;
+                    renderEvent = event;
                     continue
-                } else if (qevent.eventType === "ZoomLevelChanged") {}
-                if ((handlerList = this_._6.get(qevent.eventType)) !== null) {
+                } else if (event.eventType === "ZoomLevelChanged") {}
+                if ((handlerList = this_._6.get(event.eventType)) !== null) {
                     handlerListLength = handlerList.length();
                     for (i = 0; i < handlerListLength; ++i) {
-                        switch (qevent.eventType) {
+                        switch (event.eventType) {
                         case "TileGridReInit":
-                            handlerList.at(i).onTileGridReInit(qevent);
+                            handlerList.at(i).onTileGridReInit(event);
                             break;
                         case "ThemeChanged":
-                            handlerList.at(i).onThemeChanged(qevent);
+                            handlerList.at(i).onThemeChanged(event);
                             break;
                         case "ContextMenuItemAdded":
-                            handlerList.at(i).onContextMenuItemAdded(qevent);
+                            handlerList.at(i).onContextMenuItemAdded(event);
                             break;
                         case "QOverlayAdded":
-                            handlerList.at(i).onQOverlayAdded(qevent);
+                            handlerList.at(i).onQOverlayAdded(event);
                             break;
                         case "QOverlayModified":
-                            handlerList.at(i).onQOverlayModified(qevent);
+                            handlerList.at(i).onQOverlayModified(event);
                             break;
                         case "QOverlayMoved":
-                            handlerList.at(i).onQOverlayMoved(qevent);
+                            handlerList.at(i).onQOverlayMoved(event);
                             break;
                         case "QOverlayRemoved":
-                            handlerList.at(i).onQOverlayRemoved(qevent);
+                            handlerList.at(i).onQOverlayRemoved(event);
                             break;
                         case "QOverlaysCleared":
-                            handlerList.at(i).onQOverlaysCleared(qevent);
+                            handlerList.at(i).onQOverlaysCleared(event);
                             break;
                         default:
                             break
@@ -295,45 +233,41 @@
                     }
                 }
             }
-            this_ = null;
-            qevent = null;
-            handlerList = null;
-            handlerListLength = null;
-            listenerList = null;
-            listenerListLength = null;
-            i = null;
-            renderEvent = null;
-            zoomLevelChangedEvent = null
         },
+
+        //添加事件监听
         addEventListener: function(eventName, callback) {
             var listenerList;
-            if ((listenerList = this._7.get(eventName)) !== null) {
-                listenerList.push(callback)
+            if ((listenerList = this._mvc_array_two.get(eventName)) !== null) {
+                listenerList.push(callback);
             } else {
                 listenerList = new MyArray();
                 listenerList.push(callback);
-                this._7.set(eventName, listenerList)
+                this._mvc_array_two.set(eventName, listenerList);
             }
             listenerList = null;
             var eventListener = new _a._ab.EventListener(eventName, callback);
-            return eventListener
+            return eventListener;
         },
+
+        //移除事件监听
         removeEventListener: function(eventListener) {
             var i, listenerList, len;
             var eventName = eventListener.eventName;
             var callback = eventListener.callback;
-            if ((listenerList = this._7.get(eventName)) !== null) {
+            if ((listenerList = this._mvc_array_two.get(eventName)) !== null) {
                 len = listenerList.length();
                 for (i = 0; i < len; i++) {
                     if (listenerList.at(i) == callback) {
                         listenerList.remove(i);
-                        break
+                        break;
                     }
                 }
             }
         }
 	};
 
+	/*
 	function Model (mvc) {
 		this.mvc = mvc;
         this.model_ = new QViewMgrModel();
