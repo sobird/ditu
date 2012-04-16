@@ -1,5 +1,5 @@
 (function(){
-	Jaring.Util = {
+	Jaring.util = {
 		/**
 		 * 判断对象是否为给定的类型
 		 * 
@@ -100,7 +100,7 @@
 
 			ns = root || window;
 
-			if(!this.is(namespace,'string')){
+			if(namespace == ''){
 				return ns;
 			}
 
@@ -125,21 +125,16 @@
 			var part, namespace, classname, extendclass, construct, haveConstruct = false;
 			
 			part = /^((static) )?([\w.]+)( extends ([\w.]+))?/.exec(name);
-			//console.log(part);
 			
 			//classname 类名称
 			classname = part[3].match(/(^|\.)(\w+)$/i)[2];
-			//console.log(classname);
 			
 			//类命名空间
 			namespace = part[3].replace(/\.\w+$/, '');
-			//console.log(namespace);
 			
 			namespace = classname == namespace?'':namespace;
-			//console.log(namespace);
 			
 			namespace = this.namespace(namespace,root);
-			console.log(namespace);
 			
 			//若在给定命名空间下的类已经存在，则返回
 			if(namespace[classname]){
@@ -237,5 +232,5 @@
 		},
 	}
 
-	Jaring.create = Jaring.Util.bind(Jaring.Util.createClass, Jaring.Util);
+	Jaring.create = Jaring.util.bind(Jaring.util.createClass, Jaring.util);
 })();

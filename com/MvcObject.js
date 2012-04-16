@@ -96,7 +96,7 @@
 			};
 			_self.unbind(key);
 			//绑定外部监听器
-			getBindings(_self)[key] = Event.addListener(target, eventName,handler);
+			getBindings(_self)[key] = EventUtil.addListener(target, eventName,handler);
 			setAccessor(_self, key, target, targetKey, noNotify);
 		},
 		
@@ -110,7 +110,7 @@
 			 if (_listener) {
 				 delete getBindings(this)[key];
 				 //移除外部绑定的监听器
-				 Event.removeListener(_listener);
+				 EventUtil.removeListener(_listener);
 				 var _value = this.get(key);
 				 delete getAccessors(this)[key];
 				 this[key] = _value;
@@ -174,6 +174,6 @@
 			mvcObj['changed'](key);
 		}
 		//触发外部绑定的监听器
-		Event.trigger(mvcObj, key.toLowerCase() + "_changed");//触发事件
+		EventUtil.trigger(mvcObj, key.toLowerCase() + "_changed");//触发事件
 	}
 })();

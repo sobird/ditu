@@ -2,7 +2,7 @@
 	var ua = navigator.userAgent.toLowerCase();
 
 
-	Jaring.Browser = {
+	Jaring.browser = {
 		/**
 		 * Constant that is true if the browser is IE.
 		 *
