@@ -107,12 +107,12 @@
 	test.set('testdd','aaaa');
 	alert(test.get('test'));
 	console.log(test);
-	/*
-	var QQMapImpl._aae = function(){
+
+	function OP_Array(){
 		this._my_array = new MyArray();
 	};
 
-	QQMapImpl._aae.prototype = {
+	OP_Array.prototype = {
 		enqueue: function(obj) {
 	        this._my_array.push(obj);
 	    },
@@ -142,14 +142,11 @@
 	    }
 	};
 
-	var QQMapImpl._aad = function(){
-
-	}*/
 	//
 	function Controller(mvc){
 		this.mvc = mvc;
 		this._mvc_array_one = new AAA();
-		this._14 = new QQMapImpl._aae();
+		this._14 = new OP_Array();
 		this._mvc_array_two = new AAA();
 	}
 	Controller.prototype = {
@@ -266,6 +263,10 @@
             }
         }
 	};
+
+	var controller = new Controller();
+
+	console.log(controller);
 
 	/*
 	function Model (mvc) {
