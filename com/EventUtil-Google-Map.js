@@ -5,6 +5,7 @@
  */
 
 (function(){
+	console.log('EventUtil : Begin');
 	var eventListenerIdIndex = 0;
 	function EventListener(target, eventName, handler, type){
 		this.target = target;
@@ -240,8 +241,8 @@
 	//		
 	var tester = document.getElementById('tester');
 	var listener = EventUtil.addDomListener(tester,'click',function(e){
-		alert('listener-1');
-		alert(e);
+		//alert('listener-1');
+		//alert(e);
 		console.log(this);
 	});
 
@@ -251,7 +252,7 @@
 	});
 
 	EventUtil.addDomListener(tester,'mousehover',function(e){
-		alert(arguments.callee.caller);
+		//alert(arguments.callee.caller);
 		//console.log(e);
 	});
 
@@ -269,7 +270,7 @@
 
 	EventUtil.bind(tester, 'click', function(e){
 		console.log(this);
-		alert('test EventUtil.bind');
+		//alert('test EventUtil.bind');
 	});
 	//EventUtil.forward(tester, 'click', tester);
 
@@ -282,4 +283,5 @@
 	//console.log(_tester(['a', 'b', 'c','d'],2));//c
 	//
 	console.log(undefined == null);
+	console.log('EventUtil : End');
 })();
