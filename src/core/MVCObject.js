@@ -1,12 +1,6 @@
-/**
- * KVO OBJECT FROME DITU.GOOGLE.COM
- *
- */
-
 (function(){
 	var firstLetterUpperList = {};
-	
-	Jaring.create('Jaring.MvcObject',{
+	Jaring.create('Jaring.MVCObject',{
 		/**
 		 * MVCObject 获取值
 		 * 
@@ -174,6 +168,6 @@
 			mvcObj['changed'](key);
 		}
 		//触发外部绑定的监听器
-		Event.trigger(mvcObj, key.toLowerCase() + "_changed");//触发事件
+		Jaring.event.trigger(mvcObj, key.toLowerCase() + "_changed");//触发事件
 	}
 })();

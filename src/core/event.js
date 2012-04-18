@@ -1,56 +1,7 @@
-/**
- * google.maps.event
- * 
- * @see  https://developers.google.com/maps/documentation/javascript/reference?hl=zh-CN#MapsEventListener
- */
-
 (function(){
-	console.log('EventUtil : Begin');
 	var eventListenerIdIndex = 0;
-	/**
-	 * 事件监听器 类
-	 * EventListener Class
-	 * This class is opaque. 
-	 * It has no methods and no constructor. 
-	 * Its instances are returned from addListener(), addDomListener() and are eventually passed back to removeListener().
-	 * 
-	 * @param {[type]} target    [description]
-	 * @param {[type]} eventName [description]
-	 * @param {[type]} handler   [description]
-	 * @param {[type]} type      [description]
-	 */
-	function EventListener(target, eventName, handler, type){
-		this.target = target;
-		this.eventName = eventName;
-		this.handler = handler;
-		this.type = type;
-		this.bindHandler = null;
-		this.id = eventListenerIdIndex++;
-		getEventList(target, eventName)[this.id] = this;
-		target = null;
-	}
-	EventListener.prototype.remove = function() {
-		if (this.target) {
-			switch (this.type) {
-				case 1:
-					this.target.removeEventListener(this.eventName, this.handler, false);
-					break;
-                case 4:
-					this.target.removeEventListener(this.eventName, this.handler, true);
-					break;
-                case 2:
-					this.target.detachEvent('on' + this.eventName, this.bindHandler);
-					break;
-                case 3:
-					this.target['on' + this.eventName] = null;
-					break;
-			}
-			delete getEventList(this.target, this.eventName)[this.id];
-			this.handler = this.target = this.bindHandler = null;
-		}
-	}
-
-	EventUtil = {
+	
+	Jaring.event = {
 		/**
 		 * 跨浏览器事件处理程序注册。可以通过调用该函数所返回句柄的 eventRemoveListener(handle) 来删除此监听器。
 		 * 
@@ -184,7 +135,7 @@
 		},
 
 		bind: function(instance, eventName, handler, scope){
-			return this.addListener(instance, eventName,bind(handler, scope));
+			return this.addListener(instance, eventName,Jaring.util.bind(handler, scope));
 		},
 
 		forward: function(instance, eventName, otherInstance){
@@ -200,19 +151,8 @@
 		}
 	};
 
-
 	// --- some helper fn for EventUtil ---
-	function bind(fn, scope) {
-		if (2 < arguments.length) {
-			var _t_args = Array.prototype.slice.call(arguments, 2);
-			return function() {
-				return fn.apply(scope || this, 0 < arguments.length ? _t_args.concat(Array.prototype.slice.call(arguments, 0)) : _t_args)
-			};
-		}
-		return function() {
-			return fn.apply(scope || this, arguments);
-		}
-	}
+
 	function fixListener(listener){
 		return listener.bindHandler = function(event){
 			event = event || window.event;
@@ -248,52 +188,47 @@
 		}
 	}
 
-	//the follow is some test script
-	//
-	//		
-	var tester = document.getElementById('tester');
-	var listener = EventUtil.addDomListener(tester,'click',function(e){
-		//alert('listener-1');
-		//alert(e);
-		console.log(this);
-	});
 
-	EventUtil.addDomListener(tester,'click',function(e){
-		//alert('listener-2');
-		//console.log(e);
-	});
-
-	EventUtil.addDomListener(tester,'mousehover',function(e){
-		//alert(arguments.callee.caller);
-		//console.log(e);
-	});
-
-	//console.log(getEventList(tester));
-	//console.log(getEventList(tester,'click'));
-
-	//EventUtil.clearInstanceListeners(tester);
-
-	//EventUtil.clearListeners(tester,'click');
-
-	//EventUtil.removeListener(listener);
-
-	//EventUtil.trigger(tester, 'click');
-
-
-	EventUtil.bind(tester, 'click', function(e){
-		console.log(this);
-		//alert('test EventUtil.bind');
-	});
-	//EventUtil.forward(tester, 'click', tester);
-
-	EventUtil.trigger(tester, 'click','test');
-	//
-	function _tester(){
-		return Function.prototype.call.apply(Array.prototype.slice, arguments);
+	/**
+	 * 事件监听器 类
+	 * EventListener Class
+	 * This class is opaque. 
+	 * It has no methods and no constructor. 
+	 * Its instances are returned from addListener(), addDomListener() and are eventually passed back to removeListener().
+	 * 
+	 * @param {[type]} target    [description]
+	 * @param {[type]} eventName [description]
+	 * @param {[type]} handler   [description]
+	 * @param {[type]} type      [description]
+	 */
+	function EventListener(target, eventName, handler, type){
+		this.target = target;
+		this.eventName = eventName;
+		this.handler = handler;
+		this.type = type;
+		this.bindHandler = null;
+		this.id = eventListenerIdIndex++;
+		getEventList(target, eventName)[this.id] = this;
+		target = null;
 	}
-
-	//console.log(_tester(['a', 'b', 'c','d'],2));//c
-	//
-	console.log(undefined == null);
-	console.log('EventUtil : End');
+	EventListener.prototype.remove = function() {
+		if (this.target) {
+			switch (this.type) {
+				case 1:
+					this.target.removeEventListener(this.eventName, this.handler, false);
+					break;
+                case 4:
+					this.target.removeEventListener(this.eventName, this.handler, true);
+					break;
+                case 2:
+					this.target.detachEvent('on' + this.eventName, this.bindHandler);
+					break;
+                case 3:
+					this.target['on' + this.eventName] = null;
+					break;
+			}
+			delete getEventList(this.target, this.eventName)[this.id];
+			this.handler = this.target = this.bindHandler = null;
+		}
+	}
 })();

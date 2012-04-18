@@ -1,4 +1,4 @@
-Jaring.create('Jaring.maps.Map extends Jaring.MvcObject',{
+Jaring.create('Jaring.maps.Map extends Jaring.MVCObject',{
 
 	/**
 	 * 构造函数

@@ -178,6 +178,26 @@
 	console.log(queue.head());// null
 	console.log(queue.tail());// null
 	console.log(queue.length());// -1
+
+
+	function UUID() {
+    var _tmp = [],
+    _ = "0123456789ABCDEF".split("");
+    for (var i = 0; i < 36; i++){
+    	_tmp[i] = Math.floor(Math.random() * 16);
+    }
+    _tmp[14] = 4;
+    _tmp[19] = (_tmp[19] & 3) | 8;
+    for (i = 0; i < 36; i++) {
+    	_tmp[i] = _[_tmp[i]];
+    }
+    _tmp[8] = _tmp[13] = _tmp[18] = _tmp[23] = "-";
+    return _tmp.join("");
+}
+
+console.log(UUID());
+console.log(UUID());
+console.log(UUID());
 })();
 </script>
 </body>

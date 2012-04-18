@@ -1,6 +1,26 @@
 (function(){
 	Jaring.util = {
 		/**
+		 * 通用唯一识别码 (Universally Unique Identifier)
+		 * 
+		 * @return {String} [一个识别串]
+		 */
+		uuid: function(){
+			var _uuid = [],
+				_stra = "0123456789ABCDEF".split('');
+			for (var i = 0; i < 36; i++){
+				_uuid[i] = Math.floor(Math.random() * 16);
+			}
+			_uuid[14] = 4;
+			_uuid[19] = (_uuid[19] & 3) | 8;
+			for (i = 0; i < 36; i++) {
+				_uuid[i] = _stra[_uuid[i]];
+			}
+			_uuid[8] = _uuid[13] = _uuid[18] = _uuid[23] = '-';
+			return _uuid.join('');
+		},
+
+		/**
 		 * 判断对象是否为给定的类型
 		 * 
 		 * @return Boolean
@@ -17,11 +37,16 @@
 			return typeof(object) == type;
 		},
 
-		bind: function(fn, obj){
-			var args = arguments.length > 2 ? Array.prototype.slice.call(arguments, 2) : null;
-			return function () {
-				return fn.apply(obj, args || arguments);
-			};
+		bind: function(fn, scope){
+			if (2 < arguments.length) {
+				var _t_args = Array.prototype.slice.call(arguments, 2);
+				return function() {
+					return fn.apply(scope || this, 0 < arguments.length ? _t_args.concat(Array.prototype.slice.call(arguments, 0)) : _t_args)
+				};
+			}
+			return function() {
+				return fn.apply(scope || this, arguments);
+			}
 		},
 
 		each: function(object, callback, scope) {
@@ -204,7 +229,9 @@
 				});
 			}
 			
-			namespace[classname].prototype['toString'] = function(){return classname};
+			namespace[classname].prototype['toString'] = function(){
+				return classname
+			};
 			// 添加类静态方法
 			this.each(body['static'], function(f, n) {
 				namespace[classname][n] = f;
@@ -232,5 +259,6 @@
 		},
 	}
 
+	//Jaring.util.createClass方法别名
 	Jaring.create = Jaring.util.bind(Jaring.util.createClass, Jaring.util);
 })();

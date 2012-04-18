@@ -36,16 +36,19 @@
  	}
  	function require(jsfile){
  		var base = getPath();
-		scripts.push(base + '../source/' + jsfile);
+		scripts.push(base + '../src/' + jsfile);
 	}
 	//----------------------------------------------------------------
 	
 	require('jaring.js');
 
 	//Core 核心文件
-	require('core/Util.js');
-	require('core/Browser.js');
+	require('core/util.js');
+	require('core/browser.js');
+	require('core/event.js');
 	require('core/MVCObject.js');
+	require('core/MVCArray.js');
+	require('core/MVC.js');
 
 	require('dom/DomUtil.js');
 
