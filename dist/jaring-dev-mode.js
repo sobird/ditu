@@ -48,9 +48,8 @@
 	require('core/event.js');
 	require('core/MVCObject.js');
 	require('core/MVCArray.js');
-	require('core/MVC.js');
 
-	require('dom/DomUtil.js');
+	require('dom/dom.js');
 
 	require('map/Map.js');
 	//-----------------------------------------------------------------

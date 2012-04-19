@@ -12,9 +12,7 @@
 
 		RELEASE: "$release$",
 
-		noConflict: function(){
-			
-		},
+		noConflict: function(){},
 
 		emptyFn: function(){}
 	},window);

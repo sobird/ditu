@@ -1,4 +1,4 @@
-(function(){
+(function(Jaring){
 	Jaring.util = {
 		/**
 		 * 通用唯一识别码 (Universally Unique Identifier)
@@ -99,6 +99,15 @@
 		trim: function(s) {
 			return (s ? '' + s : '').replace(whiteSpaceReg, '');
 		},
+
+		/**
+		 * 一种类继承的方法
+		 * 
+		 * @param  {Class} destination [description]
+		 * @param  {Class} source      [description]
+		 * @return {Class}             [description]
+		 */
+		inherit: function(destination, source) {},
 
 		/**
 		 * 简单的浅拷贝
@@ -261,4 +270,4 @@
 
 	//Jaring.util.createClass方法别名
 	Jaring.create = Jaring.util.bind(Jaring.util.createClass, Jaring.util);
-})();
+})(Jaring);
