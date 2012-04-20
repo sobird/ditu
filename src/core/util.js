@@ -214,7 +214,9 @@
 				}
 				//起什么作用了?
 				namespace[classname].prototype[classname] = namespace[classname];
-				
+				namespace[classname].prototype.toString = function(){
+					return classname
+				};
 				// Add super methods
 				this.each(superprototype, function(fn, name) {
 					if(name != superclassname){
@@ -238,9 +240,6 @@
 				});
 			}
 			
-			namespace[classname].prototype['toString'] = function(){
-				return classname
-			};
 			// 添加类静态方法
 			this.each(body['static'], function(f, n) {
 				namespace[classname][n] = f;

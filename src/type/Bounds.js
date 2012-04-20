@@ -30,12 +30,30 @@
 			}
 		},
 
+		/**
+		 * Returns true if this bounds approximately equals the given bounds.
+		 * 
+		 * @param  {Bounds} bounds [description]
+		 * @return {Boolean}        [description]
+		 */
 		equals: function(bounds){
 			return !bounds ? false : this.latline.equals(bounds.latline) && this.lngline.equals(bounds.lngline)
 		},
 
-		contains: function(){
+		/**
+		 * Returns true if the given lat/lng is in this bounds.
+		 * 
+		 * @param  {LngLat} lnglat [description]
+		 * @return {Boolean}        [description]
+		 */
+		contains: function(lnglat){
+			return this.latline.contains(lnglat.lat()) && this.lngline.contains(lnglat.lng());
+		},
 
+		extend: function(lnglat){
+			this.latline.extend(lnglat.lat());
+			this.lngline.extend(lnglat.lng());
+			return this;
 		},
 
 		getCenter: function(){
@@ -45,15 +63,21 @@
 		},
 
 		getNorthEast: function(){
-
+			return new Jaring.maps.LngLat(this.latline.enLat, this.lngline.enLat, true);
 		},
 
 		getSouthWest: function(){
-
+			return new Jaring.maps.LngLat(this.latline.swLat, this.lngline.swLat, true);
 		},
 
-		union: function(){
+		toSpan: function(){
+			return new Jaring.maps.LngLat(this.lngline.isEmpty() ? 0 : (this.lngline.swLat > this.lngline.neLat) ? 360 - (this.lngline.swLat - this.lngline.neLat) : this.lngline.neLat - this.lngline.swLat, this.latline.isEmpty() ? 0 : this.latline.enLat - this.latline.swLat, true);																								
+		},
 
+		union: function(bounds){
+			this.extend(bounds.getSouthWest());
+			this.extend(bounds.getNorthEast());
+			return this;
 		},
 
 		toString: function(){

@@ -1,6 +1,11 @@
 (function(){
 	Jaring.create('Jaring.maps.LngLat', {
-		LngLat: function(lng, lat){
+		LngLat: function(lng, lat, noWrap){
+			if (noWrap) {
+				lng = ((lng - 180) % 360 + 360) % 360 - 180;
+				lat = Math.max(lat, -90);
+				lat = Math.min(lat,  90);
+			}
 			this.lng = lng;
 			this.lat = lat;
 		},
@@ -11,7 +16,7 @@
 
 		lat: function(){
 			return this.lat;
-		}
+		},
 
 		equals: function(lnglat){
 			return !lnglat ? false : (Math.abs(this.lat() - lnglat.lat()) + Math.abs(this.lng() - lnglat.lng())) <= 1.0E-9;
@@ -21,15 +26,4 @@
 			return '(' + this.lng + ', ' + this.lat + ')';
 		}
 	});
-
-	/**
-	 * 比较两个值是否近似相等
-	 * 
-	 * @param  {Float/Number} a [description]
-	 * @param  {Float/Number} b [description]
-	 * @return {Boolean}   [description]
-	 */
-	function alike(a, b){
-		return 1.0E-9 >= Math.abs(a - b);
-	}
 })();
