@@ -9,37 +9,29 @@
 		 */
 		Bounds: function(sw, ne){
 			sw && !ne && (ne = sw);
-			if (sw) {
-				var c = Cd(sw.lat(), -90, 90),
-					d = Cd(ne.lat(), -90, 90);
-				this.aa = new ge(c, d);
-				c = sw.lng();
-				d = ne.lng();
-				360 <= d - c ? this.ba = new ce(-180, 180) : (c = Dd(c, -180, 180), d = Dd(d, -180, 180), this.ba = new ce(c, d))
-			} else {
-				this.aa = new ge(1, -1), 
-				this.ba = new ce(180, -180)
-			}
-			//
 			if(sw) {
 				var swLat = Math.max(sw.lat(), -90),
 					swLat = Math.min(sw.lat(),  90);
 				var neLat = Math.max(ne.lat(), -90),
 					neLat = Math.min(ne.lat(),  90);
+				this.latline = new LatLine(swLat, neLat);
 				var swLng = sw.lng;
 				var neLng = ng.lng;
 				if(neLng - swLng >= 360){
-					this.ba = new ce(-180, 180);
+					this.lngline = new LngLine(-180, 180);
 				} else {
-
+					swLng = ((swLng + 180) % 360 + 360) % 360 - 180;
+					neLng = ((neLng + 180) % 360 + 360) % 360 - 180;
+					this.lngline = new LngLine(swLng, neLng);
 				}
+			} else {
+				this.latline = new LatLine(1, -1);
+				this.lngline = new LatLine(180, -180);
 			}
-
-
 		},
 
-		equals: function(){
-
+		equals: function(bounds){
+			return !bounds ? false : this.latline.equals(bounds.latline) && this.lngline.equals(bounds.lngline)
 		},
 
 		contains: function(){
@@ -47,7 +39,9 @@
 		},
 
 		getCenter: function(){
-
+			var latcenter = this.latline.getCenter(),
+				lngcenter = this.lngline.getCenter();
+			return new Jaring.maps.LngLat(lngcenter, latcenter);
 		},
 
 		getNorthEast: function(){
@@ -63,7 +57,7 @@
 		},
 
 		toString: function(){
-
+			return '(' + this.getSouthWest() + ', ' + this.getNorthEast() + ')';
 		}
 	});
 	
@@ -121,17 +115,41 @@
 		this.neLng = neLng;
 	}
 	LngLine.prototype = {
-		equals: function(){
-
+		equals: function(lngline){
+			return 1.0E-9 >= Math.abs(lngline.swLng - this.swLng) % 360 + Math.abs((lngline.isEmpty() ? 0 : (lngline.swLng > lngline.neLng) ? 360 - (lngline.swLng - lngline.neLng) : lngline.neLng - lngline.swLng) - (this.isEmpty() ? 0 : (this.swLng > this.neLng) ? 360 - (this.swLng - this.neLng) : this.neLng - this.swLng));
 		},
 
 		isEmpty: function(){
 			return 360 == this.swLng - this.neLng;
 		},
 
-		intersects: function(){
-			
-		}
+		intersects: function(lngline){
+			var swLng = this.swLng,
+				neLng = this.neLng;
+			return this.isEmpty() || lngline.isEmpty() ? false : (this.swLng > this.neLng) ? (lngline.swLng > lngline.neLng) || lngline.swLng <= this.neLng || lngline.neLng >= swLng : (lngline.swLng > lngline.neLng) ? lngline.swLng <= neLng || lngline.neLng >= swLng : lngline.swLng <= neLng && lngline.neLng >= swLng;
+		},
 
+		contains: function(lng){
+			-180 == lng && (lng = 180);
+			var swLng = this.swLng,
+				neLng = this.neLng;
+			return (this.swLng > this.neLng) ? (lng >= swLng || lng <= neLng) && !this.isEmpty() : lng >= swLng && lng <= neLng;
+		},
+
+		extend: function(lng){
+			this.contains(lng) || (this.isEmpty() ? this.swLng = this.neLng = lng : ((this.swLng - lng) >= 0 ? (this.swLng - lng) : this.swLng + 180 - (lng - 180)) < ((lng - this.neLng) >= 0 ? (lng - this.neLng) : lng + 180 - (this.neLng - 180)) ? this.swLng = lng : this.neLng = lng)
+		},
+
+		getCenter: function(){
+			var center = (this.swLng + this.neLng) / 2;
+			if(this.swLng > this.neLng){
+				center = ((center + 360) % 360 + 360) % 360 - 180;
+			}
+			return center;
+		},
+
+		toString: function(){
+			return '(' + this.swLng + ', ' + this.neLng + ')';
+		}
 	};
 })();
