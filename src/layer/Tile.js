@@ -6,7 +6,7 @@
 	 */
 	Jaring.create('Jaring.maps.Tile', {
 		Tile: function(){
-
+			this.image = new Image;
 		},
 
 	});

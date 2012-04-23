@@ -8,8 +8,8 @@
 		Map: function(id, options){
 			var _self = this,
 				defaults = {
-					backgroundColor: 116.39712896958922,
-					center: 39.9165275426627,
+					backgroundColor: '#ccc',
+					center: new Jaring.maps.LngLat(116.39712896958922,39.9165275426627),
 					draggable: true,
 					mixZoom: 3,
 					maxZoom: 18,
@@ -24,7 +24,9 @@
 		 * 
 		 * @param {MapOptions} options [description]
 		 */
-		setOptions: function(options){},
+		setOptions: function(options){
+			this.setValues(options);
+		},
 
 		/**
 		 * 设置地图中心的地理坐标。

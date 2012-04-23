@@ -215,7 +215,7 @@
 				//起什么作用了?
 				namespace[classname].prototype[classname] = namespace[classname];
 				namespace[classname].prototype.toString = function(){
-					return classname
+					return classname;
 				};
 				// Add super methods
 				this.each(superprototype, function(fn, name) {
