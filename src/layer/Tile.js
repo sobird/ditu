@@ -16,7 +16,7 @@
 				defaults = {
 					src: '',
 					size: new Jaring.maps.Size(256, 256),
-					offset: new Jaring.maps.Offset(0, 0);
+					offset: new Jaring.maps.Offset(0, 0),
 					mixZoom: 3,
 					maxZoom: 18,
 				},
@@ -31,14 +31,14 @@
 			style.left   	= options.offset.left + "px";
 			style.cssText   = '';
 
-			this._layer = layer;
-
 			image.onload 	= function(e){
-
+				if(typeof layer.onTileLoad == 'function'){
+					layer.onTileLoad(_self);
+				}
 			};
 
 			image.onerror 	= function(e){
-
+				//TODO
 			};
 
 			image.src		= options.src;

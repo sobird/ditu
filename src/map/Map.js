@@ -18,6 +18,8 @@
 			this.setOptions(options);
 
 			this._initHooks();
+
+			//this.addLayer(new Jaring.maps.TileLayer());
 		},
 
 		//Methods that modify map state

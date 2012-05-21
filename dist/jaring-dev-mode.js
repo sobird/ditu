@@ -58,6 +58,12 @@
 	require('dom/dom.js');
 
 	require('map/Map.js');
+
+	require('layer/BaseLayer.js');
+	require('layer/Tile.js');
+	require('layer/TileLayer.js');
+	require('layer/LayerMgr.js');
+	
 	//-----------------------------------------------------------------
 	init(scripts);
  })();
