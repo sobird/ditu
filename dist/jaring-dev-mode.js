@@ -52,6 +52,7 @@
 	require('type/LngLat.js');
 	require('type/Point.js');
 	require('type/Size.js');
+	require('type/Offset.js');
 	require('type/Bounds.js');
 
 	require('dom/dom.js');

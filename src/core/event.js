@@ -1,3 +1,7 @@
+/**
+ * 这是来自谷歌的事件处理机制
+ * 
+ */
 (function(){
 	var eventListenerIdIndex = 0;
 	

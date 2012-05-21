@@ -1,6 +1,6 @@
 (function(){
 	Jaring.create('Jaring.maps.Map extends Jaring.MVCObject',{
-
+		_hooks: [],
 		/**
 		 * 构造函数
 		 * 
@@ -16,6 +16,8 @@
 				},
 				options = Jaring.util.extend({},defaults, options);
 			this.setOptions(options);
+
+			this._initHooks();
 		},
 
 		//Methods that modify map state
@@ -59,7 +61,42 @@
 
 		getZoom: function(){},
 
-		getBounds: function(){}
+		getBounds: function(){},
+
+		/**
+		 * 初始化为地图添加的钩子函数
+		 * 
+		 * @return {none} [description]
+		 */
+		_initHooks: function () {
+			for (var i = 0, len = this._hooks.length; i < len; i++) {
+				this._hooks[i].call(this);
+			}
+		},
+
+		'static': {
+			/**
+			 * Map Class Hook static method
+			 * 
+			 * @param {Function} fn [hook method]
+			 */
+			addInitHook: function(fn){
+				var args = Array.prototype.slice.call(arguments, 1);
+
+				var hook = typeof fn === 'function' ? fn : function () {
+					this[fn].apply(this, args);
+				};
+
+				this.prototype._hooks.push(hook);
+			}
+		}
 
 	});
 })();
+
+//添加一个地图钩子测试
+Jaring.maps.Map.addInitHook(function(){
+	console.log('this is a hook!');
+	console.log(this);
+	console.log('hook end!');
+});
