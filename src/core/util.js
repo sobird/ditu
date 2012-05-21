@@ -57,7 +57,7 @@
 
 			scope = scope || object;
 
-			if (object.length !== undefined) {
+			if (this.is(object, 'array')) {
 				// Indexed arrays, needed for Safari
 				for (n = 0, l = object.length; n < l; n++) {
 					if (callback.call(scope, object[n], n, object) === false)
@@ -189,9 +189,11 @@
 			}
 			
 			//在给定命名空间下创建类/构造函数
-			namespace[classname] = body[classname];
+			namespace[classname] = function(){
+				this.__uuid = Jaring.uuid();
+				body[classname].apply(this, arguments);
+			};
 			this.extend(namespace[classname].prototype, body);
-			
 			//extends
 			extendclass = part[5];
 			if (extendclass) {
@@ -239,6 +241,10 @@
 					}
 				});
 			}
+
+			namespace[classname].prototype.toString = function(){
+				return classname;
+			};
 			
 			// 添加类静态方法
 			this.each(body['static'], function(f, n) {
@@ -269,4 +275,5 @@
 
 	//Jaring.util.createClass方法别名
 	Jaring.create = Jaring.util.bind(Jaring.util.createClass, Jaring.util);
+	Jaring.uuid = Jaring.guid = Jaring.util.uuid;
 })(Jaring);

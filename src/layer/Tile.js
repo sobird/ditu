@@ -11,56 +11,67 @@
 		 * @param {[type]} layer [description]
 		 * @param {[type]} opts  [description]
 		 */
-		Tile: function(layer,opts){
+		Tile: function(opts){
 			var _self = this,
 				defaults = {
-					src: '',
+					src: 'http://dev.crossyou.cn/misc/map/x=100;y=200;z=16;type=web;for=jaring',
 					size: new Jaring.maps.Size(256, 256),
 					offset: new Jaring.maps.Offset(0, 0),
 					mixZoom: 3,
 					maxZoom: 18,
-				},
-				options = Jaring.util.extend({},defaults, opts);
+				};
+
+			/**
+			 * 选项设置
+			 * 
+			 * @type {Options}
+			 */
+			this.options = Jaring.util.extend({},defaults, opts);
+
+			/**
+			 * 0: not started.
+			 * 1: started loading.
+			 * 2: loading done.
+			 * 
+			 * @type {Number}
+			 */
+			this.phase = 0;
+		},
+
+		load: function(layer){
+			if (this.phase != 0) {
+				return;
+			}
+			var _self = this;
+
+			this.phase = 1;
 
 			var image = new Image(),
-				style = image.style;
+				style = image.style,
+				options = this.options;
 
-			style.width		= options.size.width + "px";
-			style.height	= options.size.height + "px";
-			style.top		= options.offset.top  + "px";
-			style.left   	= options.offset.left + "px";
+			style.width		= options.size.width + 'px';
+			style.height	= options.size.height + 'px';
+			style.top		= options.offset.top  + 'px';
+			style.left   	= options.offset.left + 'px';
 			style.cssText   = '';
 
 			image.onload 	= function(e){
+				this.phase = 2;
+
 				if(typeof layer.onTileLoad == 'function'){
 					layer.onTileLoad(_self);
 				}
 			};
 
 			image.onerror 	= function(e){
-				//TODO
+				//TODO 切片Tile加载出错
 			};
 
 			image.src		= options.src;
-			this.image 		= new Image;
+			this.image 		= image;
 			image 			= null;
-		},
-
-		onLoad: function(){
-
-		},
-
-		onError: function(){
-
-		},
-
-		/**
-		 * 获取Image实例对象
-		 * 
-		 * @return {Image} [Image实例对象]
-		 */
-		getImage: function(){
-			return this.image;
+			return this;
 		},
 
 		/**
@@ -70,10 +81,6 @@
 		 */
 		remove: function(){
 			this.image = null;
-		},
-
-		getLayer: function(){
-			return this._layer;
 		}
 	});
 })();

@@ -4,6 +4,22 @@
 	 */
 	Jaring.create('Jaring.maps.BaseLayer extends Jaring.MVCObject', {
 		BaseLayer: function(){
+			this.tileHash = new Jaring.maps.Hash();
+		},
+
+		/**
+		 * 添加一个切片对象到当前图层对象
+		 */
+		add: function(tile){
+			this.tileHash.set(tile.__uuid, tile.load(this));
+			
+		},
+
+		remove: function(tile){
+
+		},
+
+		clear: function(){
 
 		},
 
@@ -16,7 +32,7 @@
 		 * @return {[type]}   [description]
 		 */
 		getTileUrl: function(x, y, z){
-			throw "Please override "+ this.toString() +" class getTileUrl() method!";
+			throw 'Please override '+ this.toString() +' class getTileUrl() method!';
 		},
 
 		/**
@@ -25,7 +41,7 @@
 		 * @return {[type]} [description]
 		 */
 		getTileOffset : function(x, y){
-			throw "Please override  "+ this.toString() +" class getTileOffset() method!";
+			throw 'Please override  '+ this.toString() +' class getTileOffset() method!';
 		},
 
 		/**
@@ -37,6 +53,7 @@
 		onTileLoad : function(tile){
 			//TODO 暂时这样处理 测试, 此处可以添加其他一些处理，
 			//例如，切片的 fadeOn 效果动画
+			console.log(tile.image);
 			document.getElementById('map').appendChild(tile.image);
 		},
 	});

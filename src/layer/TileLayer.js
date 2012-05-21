@@ -3,8 +3,8 @@
 	 * 这是图层的基础类
 	 */
 	Jaring.create('Jaring.maps.TileLayer extends Jaring.maps.BaseLayer', {
-		BaseLayer: function(){
-
+		TileLayer: function(){
+			Jaring.maps.BaseLayer.apply(this,arguments);
 		},
 
 		/**

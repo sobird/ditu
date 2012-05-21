@@ -6,12 +6,15 @@
 	 * 包括图层的添加、删除、更新等操作
 	 */
 	Jaring.create('Jaring.maps.LayerMgr', {
-		LayerMgr: function(){
-
+		LayerMgr: function(map){
+			this.map = map;
+			this.layerHash = new Jaring.maps.Hash();
+			
 		},
 
 		add: function(layer){
-
+			this.layerHash.set(layer.__uuid, layer);
+			layer.add(new Jaring.maps.Tile());
 		},
 
 		remove: function(layer){
@@ -22,13 +25,24 @@
 
 		},
 
+		update: function(){
+
+		},
+
 		/**
 		 * 渲染图层管理器中的图层
 		 * 
 		 * @return {[type]} [description]
 		 */
-		renderLayer: function(){
-
+		renderLayer: function(layer){
+			//TODO 从地图的左上角向右下角逐个渲染
+			for(var row = this.northwest.row; row <= this.southeast.row; row++){
+				for(var column = this.northwest.column-1; column <= this.southeast.column; column++){
+					if(row >= 0 && row < Math.pow(2,this.level)){
+						layer.add(new Jaring.maps.Tile());
+					}
+				}
+			}
 		}
 	});
 })();
@@ -37,7 +51,7 @@ Jaring.maps.Map.addInitHook(function(){
 	var layerMgr = new Jaring.maps.LayerMgr();
 
 
-
+console.log(layerMgr);
 	/**
 	 * 该方法将作为用户API对外提供使用
 	 * 
@@ -48,6 +62,7 @@ Jaring.maps.Map.addInitHook(function(){
 	 * @param {Layer} layer [图层实例对象]
 	 */
 	this.addLayer = function(layer){
-		console.log(layerMgr);
+		layerMgr.add(layer);
+
 	}
 });

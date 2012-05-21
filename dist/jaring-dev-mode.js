@@ -54,6 +54,8 @@
 	require('type/Size.js');
 	require('type/Offset.js');
 	require('type/Bounds.js');
+	require('type/List.js');
+	require('type/Hash.js');
 
 	require('dom/dom.js');
 
