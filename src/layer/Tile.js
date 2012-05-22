@@ -29,6 +29,8 @@
 			this.options = Jaring.util.extend({},defaults, opts);
 
 			/**
+			 * 切片状态值
+			 * 
 			 * 0: not started.
 			 * 1: started loading.
 			 * 2: loading done.
@@ -57,7 +59,14 @@
 			style.cssText   = '';
 
 			image.onload 	= function(e){
-				this.phase = 2;
+				/**
+				 * 设置切片当前状态值
+				 * 
+				 * @type {Number}
+				 */
+				_self.phase = 2;
+
+				this.className += ' jaring-tile-loaded';
 
 				if(typeof layer.onTileLoad == 'function'){
 					layer.onTileLoad(_self);

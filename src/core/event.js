@@ -235,4 +235,8 @@
 			this.handler = this.target = this.bindHandler = null;
 		}
 	}
+
+	Jaring.event.on = Jaring.event.addListener;
+	Jaring.event.un = Jaring.event.removeListener;
+	Jaring.event.fire = Jaring.event.trigger;
 })();

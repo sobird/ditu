@@ -46,7 +46,7 @@
 		},
 
 		/**
-		 * 渲染图层切片
+		 * 渲染切片
 		 * 
 		 * @return {[type]} [description]
 		 */

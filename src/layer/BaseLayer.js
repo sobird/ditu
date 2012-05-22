@@ -1,6 +1,8 @@
 (function(){
 	/**
 	 * 这是图层的基础类
+	 * 
+	 * 该类实例化后，可以被添加到LayerMgr(图层管理器)对象中
 	 */
 	Jaring.create('Jaring.maps.BaseLayer extends Jaring.MVCObject', {
 		BaseLayer: function(){
@@ -53,7 +55,6 @@
 		onTileLoad : function(tile){
 			//TODO 暂时这样处理 测试, 此处可以添加其他一些处理，
 			//例如，切片的 fadeOn 效果动画
-			console.log(tile.image);
 			document.getElementById('map').appendChild(tile.image);
 		},
 	});
