@@ -4,7 +4,7 @@
 	 * 
 	 * 该类实例化后，可以被添加到LayerMgr(图层管理器)对象中
 	 */
-	Jaring.create('Jaring.maps.BaseLayer extends Jaring.MVCObject', {
+	Jaring.create('Jaring.maps.BaseLayer extends Jaring.MVCObject Jaring.event', {
 		BaseLayer: function(){
 			this.tileHash = new Jaring.maps.Hash();
 		},
@@ -13,6 +13,9 @@
 		 * 添加一个切片对象到当前图层对象
 		 */
 		add: function(tile){
+			this.on('tileload', function(e){
+				console.log(e);
+			});
 			this.tileHash.set(tile.__uuid, tile.load(this));
 			
 		},
@@ -59,3 +62,5 @@
 		},
 	});
 })();
+
+console.log(new Jaring.maps.BaseLayer());

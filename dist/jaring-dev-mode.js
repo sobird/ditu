@@ -46,6 +46,7 @@
 	require('core/util.js');
 	require('core/browser.js');
 	require('core/event.js');
+	require('core/Observable.js');
 	require('core/MVCObject.js');
 	require('core/MVCArray.js');
 

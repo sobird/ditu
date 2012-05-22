@@ -52,13 +52,14 @@
 				style = image.style,
 				options = this.options;
 
+			style.cssText   = '';	
 			style.width		= options.size.width + 'px';
 			style.height	= options.size.height + 'px';
 			style.top		= options.offset.top  + 'px';
 			style.left   	= options.offset.left + 'px';
-			style.cssText   = '';
+			
 
-			image.onload 	= function(e){
+			image.onload 	= function(rawEvent){
 				/**
 				 * 设置切片当前状态值
 				 * 
@@ -68,9 +69,12 @@
 
 				this.className += ' jaring-tile-loaded';
 
-				if(typeof layer.onTileLoad == 'function'){
-					layer.onTileLoad(_self);
-				}
+				layer.fire('tileload', {
+					originalEvent: rawEvent,
+					tile:this,
+					src: this.src,
+					type: 'tileload'
+				});
 			};
 
 			image.onerror 	= function(e){

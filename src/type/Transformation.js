@@ -2,7 +2,7 @@
  * Jaring.Transformation is an utility class to perform simple point transformations through a 2d-matrix.
  */
 (function(){
-	Jaring.create('Jaring.Transformation', {
+	Jaring.create('Jaring.maps.Transformation', {
 		Transformation: function (/*Number*/ a, /*Number*/ b, /*Number*/ c, /*Number*/ d) {
 			this._a = a;
 			this._b = b;

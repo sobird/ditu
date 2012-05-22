@@ -1,6 +1,6 @@
 (function(){
 	var firstLetterUpperList = {};
-	Jaring.create('Jaring.MVCObject',{
+	Jaring.create('Jaring.MVCObject extends Jaring.Observable',{
 		/**
 		 * MVCObject 获取值
 		 * 

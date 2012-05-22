@@ -35,7 +35,7 @@ Jaring.CRS.EPSG3857 = Jaring.util.extend({}, Jaring.CRS, {
 	 * 
 	 * @type {Transformation}
 	 */
-	transformation: new Jaring.Transformation(0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5),
+	transformation: new Jaring.maps.Transformation(0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5),
 
 	project: function (latlng) { // (JaringatJaringng) -> Point
 		var projectedPoint = this.projection.project(latlng),
