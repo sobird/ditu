@@ -2,24 +2,46 @@
 	Jaring.create('Jaring.maps.Map extends Jaring.MVCObject',{
 		_hooks: [],
 		/**
-		 * 构造函数
+		 * MAP 构造函数
 		 * 
 		 */
 		Map: function(id, options){
 			var _self = this,
 				defaults = {
+					/**
+					 * 该地图所使用的 参考坐标系
+					 * 
+					 * @type {CRS}
+					 */
+					CRS: Jaring.CRS.EPSG3857,
+
+					/**
+					 * 地图背景颜色
+					 * 
+					 * @type {String}
+					 */
 					backgroundColor: '#ccc',
+
+					/**
+					 * 地图中心点坐标
+					 * 
+					 * @type {LngLat}
+					 */
 					center: new Jaring.maps.LngLat(116.39712896958922,39.9165275426627),
 					draggable: true,
 					mixZoom: 3,
 					maxZoom: 18,
-				},
-				options = Jaring.util.extend({},defaults, options);
-			this.setOptions(options);
+				};
+
+			this.setValues(Jaring.util.extend({},defaults, options));
 
 			this._initHooks();
 
 			this.addLayer(new Jaring.maps.TileLayer());
+		},
+
+		center_changed: function(e){
+			console.log(e);
 		},
 
 		//Methods that modify map state
@@ -65,6 +87,7 @@
 
 		getBounds: function(){},
 
+		//--------------------------------------------------------------
 		/**
 		 * 初始化为地图添加的钩子函数
 		 * 

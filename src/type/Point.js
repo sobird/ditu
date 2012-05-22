@@ -1,8 +1,9 @@
 (function(){
 	Jaring.create('Jaring.maps.Point',{
 		/**
-		 * 一个两维平面上的点
+		 * 一个两维平面上的点; 地理像素点
 		 * A point on a two-dimensional plane.
+		 * 单位(unit): 像素(pixel)
 		 * 
 		 * @param {Number} x [left]
 		 * @param {Number} y [top]
@@ -13,7 +14,7 @@
 		},
 		
 		/**
-		 * Compares two Points
+		 * Compares two Points if equals
 		 * 
 		 * @param  {Point} point [other point]
 		 * @return {Boolean}       [description]

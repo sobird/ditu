@@ -15,9 +15,26 @@
  * @type {[type]}
  */
 Jaring.CRS.EPSG3857 = Jaring.util.extend({}, Jaring.CRS, {
+	/**
+	 * 所使用的参考坐标系 代码
+	 * 
+	 * @type {String}
+	 */
 	code: 'EPSG:3857',
 
+	/**
+	 * 该坐标系下, 所使用的投影
+	 * 
+	 * @default [Jaring.Projection.SphericalMercator] 球面墨卡托投影
+	 * @type {[type]}
+	 */
 	projection: Jaring.Projection.SphericalMercator,
+
+	/**
+	 * 坐标转换对象
+	 * 
+	 * @type {Transformation}
+	 */
 	transformation: new Jaring.Transformation(0.5 / Math.PI, 0.5, -0.5 / Math.PI, 0.5),
 
 	project: function (latlng) { // (JaringatJaringng) -> Point
@@ -27,6 +44,13 @@ Jaring.CRS.EPSG3857 = Jaring.util.extend({}, Jaring.CRS, {
 	}
 });
 
-Jaring.CRS.EPSG900913 = Jaring.Util.extend({}, Jaring.CRS.EPSG3857, {
+/**
+ * 官方统一规定了代码EPSG:3857来代替EPSG:900913
+ */
+Jaring.CRS.EPSG900913 = Jaring.util.extend({}, Jaring.CRS.EPSG3857, {
 	code: 'EPSG:900913'
 });
+
+// 测试一下 ~~
+var point = Jaring.CRS.EPSG3857.latLngToPoint(new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627), 13);
+console.log(point);

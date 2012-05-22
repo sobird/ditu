@@ -1,5 +1,12 @@
 (function(){
 	Jaring.create('Jaring.maps.LngLat', {
+		/**
+		 * 经纬坐标点
+		 * 
+		 * @param {[type]} lng    [经度]
+		 * @param {[type]} lat    [维度]
+		 * @param {[type]} noWrap []
+		 */
 		LngLat: function(lng, lat, noWrap){
 			// var lng = parseFloat(lng),
 			// 	lat = parseFloat(lat);
@@ -51,7 +58,7 @@
 			var a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.pow(Math.sin(deltalng / 2), 2) * Math.cos(lat1) * Math.cos(lat2); 
 			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 			return R * c;
-		}
+		},
 		
 		toString: function(){
 			return '(' + this.lng + ', ' + this.lat + ')';

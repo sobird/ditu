@@ -43,6 +43,15 @@
 					}
 				}
 			}
+		},
+
+		/**
+		 * 渲染图层切片
+		 * 
+		 * @return {[type]} [description]
+		 */
+		renderTile: function(){
+
 		}
 	});
 })();
