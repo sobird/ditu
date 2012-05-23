@@ -20,6 +20,11 @@
 			
 		},
 
+		test_changed: function(e){
+
+			alert(e);
+		},
+
 		remove: function(tile){
 
 		},

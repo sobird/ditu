@@ -38,8 +38,11 @@
 					_target.set(_targetKey, value);
 				}
 			} else {
-				this[key] = value;
-				triggerChanged(this, key);
+				var oldValue = this[key];
+				if(oldValue !== value){
+					this[key] = value;
+					triggerChanged(this, key, oldValue);
+				}
 			}
 			
 		},
@@ -84,7 +87,7 @@
 		bindTo : function(key, target, targetKey, noNotify) {
 			var targetKey = targetKey || key,
 			_self = this,
-			eventName = targetKey.toLowerCase() + "_changed",
+			eventName = targetKey.toLowerCase() + "changed",
 			handler = function() {
 				triggerChanged(_self, key);
 			};
@@ -133,41 +136,62 @@
 		changed : function(key){}
 	});
 
+	/**
+	 * 单词首字母大写
+	 * 
+	 * @param  {String} string [description]
+	 * @return {String}        [description]
+	 */
 	function firstLetterUpper(string) {
 		var list = firstLetterUpperList;
 		return list[string] || (list[string] = string.substr(0, 1).toUpperCase() + string.substr(1));
 	}
 
-	function getAccessors(mvcObject) {
-		if (!mvcObject._accessors) {
-			mvcObject._accessors = {};
-		}
-		return mvcObject._accessors;
+	function getAccessors(mvcobj) {
+		mvcobj.__jar_accessors_ || (mvcobj.__jar_accessors_ = {});
+		return mvcobj.__jar_accessors_;
 	}
 
 	function setAccessor(mvcObject, key, target, targetKey, noNotify) {
-		this.getAccessors(mvcObject)[key] = {
+		getAccessors(mvcObject)[key] = {
 			'target': target,
 			'targetKey': targetKey
 		};
-		noNotify || this.triggerChanged(mvcObject, key);
+		noNotify || triggerChanged(mvcObject, key);
 	}
 
-	function getBindings(mvcObject) {
-		if (!mvcObject._bindings) {
-			mvcObject._bindings = {};
-		}
-		return mvcObject._bindings;
+	function getBindings(mvcobj) {
+		mvcobj.__jar_bindings_ || (mvcobj.__jar_bindings_ = {});
+		return mvcobj.__jar_bindings_
 	}
-		
-	function triggerChanged(mvcObj, key) {
-		var _change = key + "_changed";
-		if (mvcObj[_change]){
-			mvcObj[_change]();
-		}else{
-			mvcObj['changed'](key);
+	
+	/**
+	 * MVCObject 事件触发
+	 * junlong.yang at 2012/05/23 修改更新
+	 * 为事件句柄 传递 changeEvent 参数
+	 * 
+	 * @param  {[type]} mvcObj   [description]
+	 * @param  {[type]} key      [description]
+	 * @param  {[type]} oldValue [description]
+	 * @return {[type]}          [description]
+	 */
+	function triggerChanged(mvcObj, key, oldValue) {
+		var onKeyChanged = 'on' + firstLetterUpper(key) + "Changed";
+
+		var changeEvent = {
+			key: key,
+			type: key.toLowerCase() + "changed",
+			oldValue: oldValue,
+			newValue: mvcObj[key]
 		}
+
+		if (mvcObj[onKeyChanged]){
+			mvcObj[onKeyChanged](changeEvent);
+		}else{
+			mvcObj['changed'](key, changeEvent);
+		}
+
 		//触发外部绑定的监听器
-		Jaring.event.trigger(mvcObj, key.toLowerCase() + "_changed");//触发事件
+		Jaring.event.trigger(mvcObj, key.toLowerCase() + "changed",changeEvent);//触发事件
 	}
 })();

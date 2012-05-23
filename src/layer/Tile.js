@@ -34,6 +34,7 @@
 			 * 0: not started.
 			 * 1: started loading.
 			 * 2: loading done.
+			 * 3: loaded error.
 			 * 
 			 * @type {Number}
 			 */
@@ -79,6 +80,21 @@
 
 			image.onerror 	= function(e){
 				//TODO 切片Tile加载出错
+				/**
+				 * 设置切片当前状态值
+				 * 
+				 * @type {Number}
+				 */
+				_self.phase = 3;
+
+				this.className += ' jaring-tile-error';
+
+				layer.fire('tileerror', {
+					originalEvent: rawEvent,
+					tile:this,
+					src: this.src,
+					type: 'tileload'
+				});
 			};
 
 			image.src		= options.src;

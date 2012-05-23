@@ -157,7 +157,7 @@
 
 	// --- some helper fn for EventUtil ---
 
-	function fixListener(listener){
+	var fixListener = function(listener){
 		return listener.bindHandler = function(event){
 			event = event || window.event;
 			if(event && event.target) try {
@@ -174,7 +174,7 @@
 			return returnValue;
 		}
 	}
-	function getEventList(instance, eventName) {
+	var getEventList = function(instance, eventName) {
 		if (eventName) {
 			instance.__events_ || (instance.__events_ = {});
 			var _events = instance.__events_;
@@ -205,7 +205,7 @@
 	 * @param {[type]} handler   [description]
 	 * @param {[type]} type      [description]
 	 */
-	function EventListener(target, eventName, handler, type){
+	var EventListener = function(target, eventName, handler, type){
 		this.target = target;
 		this.eventName = eventName;
 		this.handler = handler;
@@ -235,8 +235,4 @@
 			this.handler = this.target = this.bindHandler = null;
 		}
 	}
-
-	Jaring.event.on = Jaring.event.addListener;
-	Jaring.event.un = Jaring.event.removeListener;
-	Jaring.event.fire = Jaring.event.trigger;
 })();

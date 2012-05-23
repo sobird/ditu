@@ -40,9 +40,7 @@
 			this.addLayer(new Jaring.maps.TileLayer());
 		},
 
-		center_changed: function(e){
-			console.log(e);
-		},
+		
 
 		//Methods that modify map state
 		/**
