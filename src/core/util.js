@@ -37,6 +37,19 @@
 			return typeof(object) == type;
 		},
 
+		trim: function( string ) {
+			return (string||"").replace(/^\s+|\s+$/g, "");
+		},
+
+		inArray: function( b, array ) {
+			for ( var i = 0, l = array.length; i < l; i++ ) {
+				if ( array[i] == b ){
+					return i;
+				}
+			}
+			return -1;
+		},
+
 		bind: function(fn, scope){
 			if (2 < arguments.length) {
 				var _t_args = Array.prototype.slice.call(arguments, 2);

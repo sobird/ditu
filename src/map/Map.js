@@ -35,6 +35,9 @@
 
 			this.setValues(Jaring.util.extend({},defaults, options));
 
+			/**
+			 * 初始化 Map Hooks
+			 */
 			this._initHooks();
 
 			this.addLayer(new Jaring.maps.TileLayer());
