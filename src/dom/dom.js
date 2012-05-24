@@ -1,7 +1,7 @@
 /**
  * DOMUtil 实现了一些 简单的dom操作
  * 
- * 实现了简单的链式调用
+ * 简单的链式调用
  * 
  * @author junlong.yang CrossYou2009@gmail.com
  * @since 1.0.0
@@ -13,6 +13,24 @@
 			var el = (typeof id === 'string' ? document.getElementById(id) : id);
 			Jaring.util.extendIf(el, this);
 			return el;
+		},
+
+		/**
+		 * 设置/获取/清空 DOM Element 的透明度
+		 * 
+		 * 参数可能情况:
+		 * 1、(element, opacity) 为element设置透明度 setOpacity
+		 * 2、(element, '') 清空element的透明度 clearOpcity
+		 * 3、(opacity) 为this.element设置透明度 setOpacity
+		 * 4、('') 清空this.element的透明度 clearOpcity
+		 * 5、(element) 获取element的透明度 getOpacity
+		 * 6、() 获取this.element的透明度 getOpacity
+		 * 
+		 * @author junlong.yang
+		 * @since 1.0.0
+		 */
+		opacity: function(){
+
 		},
 
 		/**
@@ -40,8 +58,26 @@
 			}
 		},
 
-		style: function(elem, name){
+		/**
+		 * 获取DOM Element 计算后的 样式属性值
+		 * 
+		 * @param  {[type]} mix  [description]
+		 * @param  {[type]} name [description]
+		 * @return {[type]}      [description]
+		 */
+		style: function(mix, name){
+			var el = name ? mix : this,
+				cn = name || mix;
 
+			var ret = el.style[cn];
+			if (!ret && el.currentStyle) {
+				ret = el.currentStyle[cn];
+			}
+			if (!ret || ret === 'auto') {
+				var css = document.defaultView.getComputedStyle(el, null);
+				ret = css ? css[cn] : null;
+			}
+			return (ret === 'auto' ? null : ret);
 		},
 
 		/**
@@ -52,21 +88,25 @@
 		 * @return {[type]} [description]
 		 */
 		css: function(elem, name){
-
+			//TODO
 		},
 
 		attr: function(){
-
+			//TODO
 		},
 
 		prop: function(){
-
+			//TODO
 		},
 
 		create: function(tagName){
 			var el = document.createElement(tagName);
 			Jaring.util.extendIf(el, this);
 			return el;
+		},
+
+		remove: function(){
+
 		},
 
 		append: function(child){
@@ -142,6 +182,21 @@
 			Jaring.event.removeListener(listener);
 		},
 
+		/**
+		 * 为一个DOM对象, 值注册一次事件处理程序
+		 * 当该事件处理程序触发后, 立刻注销该处理程序
+		 * 
+		 * 传参情况说明:
+		 * 1.(instance, eventName, handler, capture)
+		 * 2.(eventName, handler, capture)
+		 * 其中 capture 为可选参数 控制事件属于:冒泡还是捕获
+		 * 
+		 * @param  {[type]} instance  [description]
+		 * @param  {[type]} eventName [description]
+		 * @param  {[type]} handler   [description]
+		 * @param  {[type]} capture   [description]
+		 * @return {[type]}           [description]
+		 */
 		once: function(instance, eventName, handler, capture){
 			var args = Array.prototype.slice.call(arguments, 0);
 
@@ -159,6 +214,14 @@
 
 		/**
 		 * 集成了各种与offset相关的方法
+		 * 
+		 * 传参情况说明:
+		 * 1.(element, offset) 为element设置left,top值
+		 * 2.(offset) 为this.element设置left,top值
+		 * 3.(element) 获取element的left,top值
+		 * 4.() 获取this.element的left,top值
+		 * 5.(element, true) 获取element,相对于文档页面左上角的left,top值
+		 * 6.(true) 获取this.element 相对于文档页面左上角的left,top值
 		 * 
 		 * @author junlong.yang
 		 * @since 1.0.0
@@ -184,7 +247,7 @@
 					left += el.offsetLeft || 0;
 
 					if (el.offsetParent === body &&
-							L.DomUtil.getStyle(el, 'position') === 'absolute') {
+							Jaring.dom.style(el, 'position') === 'absolute') {
 						break;
 					}
 					el = el.offsetParent;
@@ -228,13 +291,22 @@
 		 * 获取浏览器滚动条 偏移量
 		 * 
 		 * @author junlong.yang
-		 * @return {Offset} [Jaring.maps.Offset]
+		 * @return {Offset} [Jaring.maps.Offsets]
 		 */
 		scroll: function() {
 			var html = document.documentElement,
-				body = document.body;
+				body = document.body,
+				scrollLeft = 0,
+				scrollTop  = 0;
 
-			return new Jaring.maps.Offset((html.scrollLeft + body.scrollLeft) || 0, (html.scrollTop + body.scrollTop) || 0);
+			if (html && (html.scrollTop || html.scrollLeft)){
+				scrollLeft = html.scrollLeft;
+				scrollTop  = html.scrollTop;
+			} else if (body){
+				scrollLeft = body.scrollLeft;
+				scrollTop  = body.scrollTop;
+			}
+			return new Jaring.maps.Offset(scrollLeft, scrollTop);
 		}
 	}
 })();
@@ -242,7 +314,11 @@
 //测试代码
 console.log('Jaring.dom tester : begin');
 
-console.log(Jaring.dom.create('div').append(Jaring.dom.create('p')).append(Jaring.dom.create('a')).appendTo(Jaring.dom.create('a')));
+window.onload = function(){
+	console.log(Jaring.dom.get('map').offset(true));
+
+
+}
 
 console.log(Jaring.dom.create('div').addClass('CrossYou').addClass('test').offset(new Jaring.maps.Offset(22,33)).offset(true));
 

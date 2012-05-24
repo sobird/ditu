@@ -33,6 +33,8 @@
 			this.x = this.x();
 			this.y = this.y();
 
+			this.point = new Jaring.maps.Point(this.x, this.y);
+
 			if (event.type == "DOMMouseScroll") {
 				this.type = "mousewheel";
 				this.wheelDelta = this.getWheelDelta() * 24;
@@ -42,13 +44,13 @@
 		x: function(event){
 			var event = event ? (event.originalEvent || event) : this.originalEvent;
 				
-			return event.pageX ? event.pageX : event.clientX + Jaring.dom.scroll().left;
+			return event.pageX ? (event.pageX || 0) : (event.clientX || 0) + Jaring.dom.scroll().left;
 		},
 
 		y: function(event){
 			var event = event ? (event.originalEvent || event) : this.originalEvent;
 				
-			return event.pageY ? event.pageY : event.clientY + Jaring.dom.scroll().top;
+			return event.pageY ? (event.pageY || 0) : (event.clientY || 0) + Jaring.dom.scroll().top;
 		},
 
 		/**
@@ -131,6 +133,15 @@
 				}
 			}
 			return this.resolveTextNode(target)
+		},
+
+		offsetBy: function(mix, container){
+			var event = container ? mix : this,
+				container = container || mix,
+				container = Jaring.dom.get(container);
+			var offset = container.offset(true);
+
+			return new Jaring.maps.Offset(this.x - offset.left, this.y - offset.top);
 		},
 
 		//swallow then digest
