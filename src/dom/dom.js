@@ -8,6 +8,8 @@
  * @return {[type]} [description]
  */
 (function(){
+	var _prop_cache = {};
+
 	Jaring.dom = {
 		get: function(id){
 			var el = (typeof id === 'string' ? document.getElementById(id) : id);
@@ -61,6 +63,16 @@
 		/**
 		 * 获取DOM Element 计算后的 样式属性值
 		 * 
+		 * 传参情况说明:
+		 * 1.(element, prop, value) 为element设置style样式
+		 * 2.(prop, value) 为this.element设置style样式
+		 * 3.(element, props)
+		 * 4.(props)
+		 * 5.(element, prop)
+		 * 6.(prop)
+		 * 7.('')
+		 * 8.()
+		 * 
 		 * @param  {[type]} mix  [description]
 		 * @param  {[type]} name [description]
 		 * @return {[type]}      [description]
@@ -79,6 +91,37 @@
 			}
 			return (ret === 'auto' ? null : ret);
 		},
+
+		getStyle: function(mix, name){
+			var el = name ? mix : this,
+				cn = name || mix,
+				ret = null;
+
+			if(document.defaultView && document.defaultView.getComputedStyle) {
+				if (cn == "float") {
+					cn = "cssFloat";
+				}
+				if (ret = el.style[cn]) {
+					return ret;
+				}
+				var style = document.defaultView.getComputedStyle(el, null);
+				ret = style ? style[cn] : null;
+			} else {
+				if (cn == "opacity") {
+					return this.opacity(el);
+				} else if (cn == "float") {
+					cn = "styleFloat";
+				}
+
+				if (ret = el.style[cn]) {
+					return ret;
+				}
+
+				var style = el.currentStyle;
+				ret = style ? style[cn] : null;
+			}
+			return (ret === 'auto' ? null : ret);
+		}
 
 		/**
 		 * 设置style/获取计算后的style
