@@ -41,6 +41,7 @@
 		 * @return {Undefined} [description]
 		 */
 		addDomListenerOnce: function(instance, eventName, handler, capture){
+			console.log(this);
 			var listener = this.addDomListener(instance, eventName, function(){
 				listener.remove();
 				handler.apply(instance, arguments);

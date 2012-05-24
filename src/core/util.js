@@ -123,7 +123,7 @@
 		inherit: function(destination, source) {},
 
 		/**
-		 * 简单的浅拷贝
+		 * 简单的浅拷贝, 覆盖已经存在的属性
 		 */
 		extend: function(destination) {
 			var i, l;
@@ -138,6 +138,21 @@
 
 			return destination;
 		},
+
+		extendIf: function(destination) {
+			var i, l;
+
+			for (i = 1, l = arguments.length; i < l; i++) {
+				this.each(arguments[i], function(value, property) {
+					if (value !== undefined && destination[property] == undefined){
+						destination[property] = value;
+					}
+				});
+			}
+
+			return destination;
+		},
+
 
 		/**
 		 * 创建命名空间

@@ -70,12 +70,11 @@
 
 				this.className += ' jaring-tile-loaded';
 
-				layer.fire('tileload', {
-					originalEvent: rawEvent,
+				layer.fire('tileload', new Jaring.maps.Event(rawEvent).swallow({
 					tile:this,
 					src: this.src,
 					type: 'tileload'
-				});
+				}));
 			};
 
 			image.onerror 	= function(e){

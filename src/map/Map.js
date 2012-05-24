@@ -1,12 +1,27 @@
 (function(){
 	Jaring.create('Jaring.maps.Map extends Jaring.MVCObject',{
+		/**
+		 * 地图类(Map Class)钩子列表
+		 * 
+		 * @type {Array}
+		 */
 		_hooks: [],
 		/**
 		 * MAP 构造函数
 		 * 
 		 */
-		Map: function(id, options){
+		Map: function(container, options){
+			/**
+			 * 地图容器: Map Container
+			 * 
+			 * @type {HTML Element}
+			 */
+			this.container = Jaring.dom.get(container);
+
+			this.size = this.container.size();
+			
 			var _self = this,
+
 				defaults = {
 					/**
 					 * 该地图所使用的 参考坐标系
@@ -55,6 +70,21 @@
 			this.setValues(options);
 		},
 
+		getMapTypeId: function(){},
+
+		/**
+		 * 返回当前的 Projection。
+		 * 如果还未启动地图（即 mapType 仍为 Null），则结果为 Null。
+		 * 侦听 projection_changed 并检查它的值以确保它的值不为 Null。
+		 * ----------------------------------------------------------------
+		 * Returns the current Projection. 
+		 * If the map is not yet initialized (i.e. the mapType is still null) then the result is null. 
+		 * Listen to projection_changed and check its value to ensure it is not null.
+		 * 
+		 * @return {Projection} [description]
+		 */
+		getProjection: function(){},
+
 		/**
 		 * 设置地图中心的地理坐标。
 		 * 
@@ -87,6 +117,26 @@
 		getZoom: function(){},
 
 		getBounds: function(){},
+
+		/**
+		 * 根据相对地图容器的像素坐标获取地理坐标.
+		 * 
+		 * Computes the geographical coordinates from pixel coordinates in the map's container.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		fromContainerPixelToLatLng: function(){},
+
+		/**
+		 * 根据地理坐标获取相对地图容器的像素坐标.
+		 * 
+		 * Computes the pixel coordinates of the given geographical location in the DOM element the map's outer container.
+		 * 
+		 * @return {[type]} [description]
+		 */
+		fromLatLngToContainerPixel: function(){},
+		fromLatLngToPixel: function(){},
+		fromPixelToLatLng: function(){},
 
 		//--------------------------------------------------------------
 		/**

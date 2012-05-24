@@ -53,6 +53,7 @@
 	require('type/Transformation.js');
 	require('type/LngLat.js');
 	require('type/Point.js');
+	require('type/Event.js');
 	require('type/Size.js');
 	require('type/Offset.js');
 	require('type/Bounds.js');
@@ -70,6 +71,7 @@
 	require('geo/crs/CRS.EPSG3857.js'),
 
 	require('map/Map.js');
+	require('map/initMapRawEvent.js');
 
 	require('layer/BaseLayer.js');
 	require('layer/Tile.js');

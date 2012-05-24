@@ -17,8 +17,9 @@
 			return Jaring.event.removeListener(listener);
 		},
 		fire: function(eventName){
-			var var_args = Array.prototype.slice.call(arguments, 1);
-			return Jaring.event.trigger.apply(this, [this, eventName].concat(var_args));
+			var args = Array.prototype.slice.call(arguments, 0);
+			args.unshift(this);
+			return Jaring.event.trigger.apply(Jaring.event, args);
 		},
 		bind: function(eventName, handler, scope){
 			return Jaring.event.bind(this, eventName, handler, scope);
