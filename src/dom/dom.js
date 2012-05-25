@@ -8,138 +8,11 @@
  * @return {[type]} [description]
  */
 (function(){
-	var _prop_cache = {};
-
 	Jaring.dom = {
 		get: function(id){
 			var el = (typeof id === 'string' ? document.getElementById(id) : id);
 			Jaring.util.extendIf(el, this);
 			return el;
-		},
-
-		/**
-		 * 设置/获取/清空 DOM Element 的透明度
-		 * 
-		 * 参数可能情况:
-		 * 1、(element, opacity) 为element设置透明度 setOpacity
-		 * 2、(element, '') 清空element的透明度 clearOpcity
-		 * 3、(opacity) 为this.element设置透明度 setOpacity
-		 * 4、('') 清空this.element的透明度 clearOpcity
-		 * 5、(element) 获取element的透明度 getOpacity
-		 * 6、() 获取this.element的透明度 getOpacity
-		 * 
-		 * @author junlong.yang
-		 * @since 1.0.0
-		 */
-		opacity: function(){
-
-		},
-
-		/**
-		 * 返回/获取 DOM Element 的长度 宽度
-		 * 
-		 * @return {Size} size [Jaring.maps.Size]
-		 */
-		size: function(){
-			var args = Array.prototype.slice.call(arguments, 0),
-				last = args[args.length - 1];
-
-			if (last instanceof Jaring.maps.Size){
-				var el = (args[0] instanceof Jaring.maps.Size) ? this : args[0];
-				el.style.width = last.width + 'px';
-				el.style.height  = last.height  + 'px';
-				el._jaring_size_ = last;
-				return el;
-			} else {
-				var el = args[0] || this;
-				if (el._jaring_size_){
-					return el._jaring_size_;
-				}
-
-				return new Jaring.maps.Size(el.clientWidth||0, el.clientHeight||0);
-			}
-		},
-
-		/**
-		 * 获取DOM Element 计算后的 样式属性值
-		 * 
-		 * 传参情况说明:
-		 * 1.(element, prop, value) 为element设置style样式
-		 * 2.(prop, value) 为this.element设置style样式
-		 * 3.(element, props)
-		 * 4.(props)
-		 * 5.(element, prop)
-		 * 6.(prop)
-		 * 7.('')
-		 * 8.()
-		 * 
-		 * @param  {[type]} mix  [description]
-		 * @param  {[type]} name [description]
-		 * @return {[type]}      [description]
-		 */
-		style: function(mix, name){
-			var el = name ? mix : this,
-				cn = name || mix;
-
-			var ret = el.style[cn];
-			if (!ret && el.currentStyle) {
-				ret = el.currentStyle[cn];
-			}
-			if (!ret || ret === 'auto') {
-				var css = document.defaultView.getComputedStyle(el, null);
-				ret = css ? css[cn] : null;
-			}
-			return (ret === 'auto' ? null : ret);
-		},
-
-		getStyle: function(mix, name){
-			var el = name ? mix : this,
-				cn = name || mix,
-				ret = null;
-
-			if(document.defaultView && document.defaultView.getComputedStyle) {
-				if (cn == "float") {
-					cn = "cssFloat";
-				}
-				if (ret = el.style[cn]) {
-					return ret;
-				}
-				var style = document.defaultView.getComputedStyle(el, null);
-				ret = style ? style[cn] : null;
-			} else {
-				if (cn == "opacity") {
-					return this.opacity(el);
-				} else if (cn == "float") {
-					cn = "styleFloat";
-				}
-
-				if (ret = el.style[cn]) {
-					return ret;
-				}
-
-				var style = el.currentStyle;
-				ret = style ? style[cn] : null;
-			}
-			return (ret === 'auto' ? null : ret);
-		}
-
-		/**
-		 * 设置style/获取计算后的style
-		 * 
-		 * @see  http://jquery.com
-		 * @see  http://www.zhangxinxu.com/wordpress/2012/05/getcomputedstyle-js-getpropertyvalue-currentstyle/
-		 * @return {[type]} [description]
-		 */
-		css: function(elem, name){
-			//TODO
-		},
-
-		attr: function(){
-			//TODO
-		},
-
-		prop: function(){
-			//TODO
 		},
 
 		create: function(tagName){
@@ -148,64 +21,8 @@
 			return el;
 		},
 
-		remove: function(){
-
-		},
-
-		append: function(child){
-			this.appendChild(child);
-			return this;
-		},
-
-		appendTo: function(parent){
-			parent.appendChild(this);
-			return this;
-		},
-
-		/**
-		 * 判断Element是否存在给定的className
-		 * 
-		 * @author junlong.yang
-		 * @since 1.0.0
-		 * @param  {[type]}  mix  [description]
-		 * @param  {[type]}  name [description]
-		 * @return {Boolean}      [description]
-		 */
-		hasClass: function (mix, name) {
-			var el = name ? mix : this,
-				cn = name || mix;
-
-			return (el.className.length > 0) &&
-					new RegExp("(^|\\s)" + cn + "(\\s|$)").test(el.className);
-		},
-
-		addClass: function(mix, name){
-			var el = name ? mix : this,
-				cn = name || mix;
-
-			if (!el.hasClass(el, cn)) {
-				el.className += (el.className ? ' ' : '') + cn;
-			}
-
-			return el;
-		},
-
-		removeClass: function (mix, name) {
-			var el = name ? mix : this,
-				cn = name || mix;
-
-			el.className = el.className.replace(/(\S+)\s*/g, function (w, match) {
-				if (match === cn) {
-					return '';
-				}
-				return w;
-			}).replace(/^\s+/, '');
-
-			return el;
-		},
-
-		//DOM EVENT
-		on: function(instance,eventName, handler, capture){
+		//DOM EVENT : BEGIN
+		on: function(){
 			var args = Array.prototype.slice.call(arguments, 0);
 
 			if(Jaring.util.is(args[0], 'string')){
@@ -234,13 +51,9 @@
 		 * 2.(eventName, handler, capture)
 		 * 其中 capture 为可选参数 控制事件属于:冒泡还是捕获
 		 * 
-		 * @param  {[type]} instance  [description]
-		 * @param  {[type]} eventName [description]
-		 * @param  {[type]} handler   [description]
-		 * @param  {[type]} capture   [description]
-		 * @return {[type]}           [description]
+		 * @return {Element} [DOM Element]
 		 */
-		once: function(instance, eventName, handler, capture){
+		once: function(){
 			var args = Array.prototype.slice.call(arguments, 0);
 
 			if(Jaring.util.is(args[0], 'string')){
@@ -254,7 +67,304 @@
 			el.listener = listener;
 			return el;
 		},
+		//DOM EVENT : END
+		
+		/**
+		 * 判断Element是否存在给定的className
+		 * 
+		 * @author junlong.yang
+		 * @since 1.0.0
+		 * @param  {[type]}  mix  [description]
+		 * @param  {[type]}  name [description]
+		 * @return {Boolean}      [description]
+		 */
+		hasClass: function (mix, name) {
+			var el = name ? mix : this,
+				cn = name || mix;
 
+			return (el.className.length > 0) &&
+					new RegExp('(^|\\s)' + cn + '(\\s|$)').test(el.className);
+		},
+
+		addClass: function(mix, name){
+			var el = name ? mix : this,
+				cn = name || mix;
+
+			if (!el.hasClass(el, cn)) {
+				el.className += (el.className ? ' ' : '') + cn;
+			}
+
+			return el;
+		},
+
+		removeClass: function (mix, name) {
+			var el = name ? mix : this,
+				cn = name || mix;
+
+			el.className = el.className.replace(/(\S+)\s*/g, function (w, match) {
+				if (match === cn) {
+					return '';
+				}
+				return w;
+			}).replace(/^\s+/, '');
+
+			return el;
+		},
+
+
+		/**
+		 * 获取DOM Element 计算后的 样式属性值
+		 * 该方法是一个比较强大的方法
+		 * 暂未考虑性能问题, 感觉这是一个比较变态的条件判断~~ !
+		 * 
+		 * 传参情况说明:
+		 * 1.(element, prop, value) 为element设置style样式 setStyle
+		 * 2.(prop, value) 为this.element设置style样式 setStyle
+		 * 3.(element, props) setStyles
+		 * 4.(props) setStyles
+		 * 5.(element, prop) getStyle
+		 * 6.(prop) getStyle
+		 * 7.(element, '') clearStyle
+		 * 8.('') clearStyle
+		 * 9.(element) getStyles
+		 * 10.() getStyles
+		 * 
+		 * @author junlong.yang
+		 * @since 1.0.0
+		 * 
+		 * @param  {[type]} mix  [description]
+		 * @param  {[type]} name [description]
+		 * @return {[type]}      [description]
+		 */
+		css: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = args[args.length - 1];
+				lastnd = args[args.length - 2];
+
+			if(Jaring.util.is(last, 'string') && Jaring.util.is(lastnd, 'string')) {//setStyle
+				if(args.length = 2) {
+					args.unshift(this);
+				}
+				var elem = args[0], 
+					prop = args[1], 
+					value = args[2];
+
+					switch (prop) {
+						case "opacity":
+							this.opacity(elem, value);
+							break;
+						case "float":
+						$ = Jaring.browser.msie ? "styleFloat": "cssFloat";
+						default:
+						elem.style[prop] = value;
+					}
+
+			} else if(Jaring.util.is(last, 'object') && (last instanceof Object)) {//setStyles
+				if(args.length = 1) {
+					args.unshift(this);
+				}
+				var elem = args[0], 
+					props = args[1];
+
+					for (var prop in props) {
+						if (typeof props[C] != "function") {
+							this.css(elem, prop, props[prop])
+						}
+					}
+
+			} else if(Jaring.util.is(last, 'string')){//getStyle
+				var el = args[1] ? args[0] : this,
+					cn = args[1] || args[0],
+					ret = null;
+				if(document.defaultView && document.defaultView.getComputedStyle) {
+					if (cn == 'float') {
+						cn = 'cssFloat';
+					}
+					if (ret = el.style[cn]) {
+						return ret;
+					}
+					var style = document.defaultView.getComputedStyle(el, null);
+					ret = style ? style[cn] : null;
+				} else {
+					if (cn == 'opacity') {
+						return this.opacity(el);
+					} else if (cn == 'float') {
+						cn = 'styleFloat';
+					}
+
+					if (ret = el.style[cn]) {
+						return ret;
+					}
+
+					var style = el.currentStyle;
+					ret = style ? style[cn] : null;
+				}
+				return (ret === 'auto' ? null : ret);
+
+			} else if(last == '') { //clearStyle
+				//TODO
+			} else {//getStyles
+				//TODO
+				return null;
+			}
+		},
+
+		/**
+		 * 设置/获取/清空 DOM Element 的透明度
+		 * 
+		 * 参数可能情况:
+		 * 1、(element, opacity) 为element设置透明度 setOpacity
+		 * 2、(element, '') 清空element的透明度 clearOpcity
+		 * 3、(opacity) 为this.element设置透明度 setOpacity
+		 * 4、('') 清空this.element的透明度 clearOpcity
+		 * 5、(element) 获取element的透明度 getOpacity
+		 * 6、() 获取this.element的透明度 getOpacity
+		 * 
+		 * @author junlong.yang
+		 * @since 1.0.0
+		 */
+		opacity: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = parseFloat(args[args.length - 1]);
+
+			if(typeof last == 'number') {//setOpacity
+
+				var el = (typeof parseFloat(args[0]) == 'number') ? this : args[0];
+
+				if(Jaring.browser.msie) {//IE
+					el.style.zoom = 1;
+					el.style.filter = value !== 1 ? 'alpha(opacity=' + Math.round(value * 100) + ')' : '';
+				} else {
+					el.style.opacity = last;
+				}
+				return el;
+
+			} else if(last == ''){//clearOpacity
+
+				var el = args[0] == '' ? this : args[0];
+
+				if (Jaring.browser.msie) {
+					if (typeof el.style.filter == 'string' && (/alpha/i).test(el.style.filter)) {
+						el.style.filter = '';
+					}
+				} else {
+					el.style.opacity = '';
+					el.style['-moz-opacity'] = '';
+					 el.style['-khtml-opacity'] = '';
+				}
+
+				return el;
+
+			} else {//getOpacity
+
+				var el = args[0] || this;
+
+				if (typeof el.style.filter == 'string') {
+					var match = el.style.filter.match(/alpha\(opacity=(.*)\)/i);
+					if (match) {
+						var opacity = parseFloat(match[1]);
+						if (!isNaN(opacity)) {
+							return opacity ? opacity / 100: 0;
+						}
+					}
+					return 1;
+				} else {
+					return parseFloat(el.style.opacity) || 1;
+				}
+
+			}
+		},
+
+		/**
+		 * 返回/获取 DOM Element 的长度 宽度
+		 * 
+		 * 传参情况说明:
+		 * 1.(element) getSize
+		 * 2.() getSize
+		 * 3.(element, size) setSize
+		 * 4.(size) setSize
+		 * 
+		 * @author junlong.yang
+		 * @since 1.0.0
+		 * @return {Size} size [Jaring.maps.Size]
+		 */
+		size: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = args[args.length - 1];
+
+			if (last instanceof Jaring.maps.Size){
+				var el = (args[0] instanceof Jaring.maps.Size) ? this : args[0];
+				el.style.width = last.width + 'px';
+				el.style.height  = last.height  + 'px';
+				el._jaring_size_ = last;
+				return el;
+			} else {
+				var el = args[0] || this;
+				if (el._jaring_size_){
+					return el._jaring_size_;
+				}
+
+				return new Jaring.maps.Size(el.clientWidth||0, el.clientHeight||0);
+			}
+		},
+
+		attr: function(){
+			//TODO
+		},
+
+		prop: function(){
+			//TODO
+		},
+
+		/**
+		 * 移除DOM元素
+		 * 
+		 * 参数情况说明:
+		 * 1.(element,boolean)
+		 * 2.(element)
+		 * 3.()
+		 * 4.(boolean)
+		 * 
+		 * @return {[type]} [description]
+		 */
+		remove: Jaring.browser.msie ? function() {
+			var _temp_div,_obj_array,i,l;
+			return function(mix, b) {
+				var el = (typeof b == 'boolean') ? mix : this,
+					b = b || mix;
+
+				if (el && el.tagName != 'BODY') {
+					_obj_array = el.getElementsByTagName('OBJECT');
+					l = _obj_array.length;
+					for (i = 0; i < l; i++) {
+						_obj_array[0].parentNode.removeChild(_obj_array[0]);
+					}
+					if (!b) {
+						el.parentNode.removeChild(el);
+						return;
+					}
+					_temp_div = _temp_div || document.createElement('div');
+					_temp_div.appendChild(el);
+					_temp_div.innerHTML = '';
+				}
+			}
+		}() : function(element) {
+			var el = element || this;
+        	if (el && el.parentNode && el.tagName != 'BODY') {
+        		el.parentNode.removeChild(el)
+        	}
+		},
+
+		append: function(child){
+			this.appendChild(child);
+			return this;
+		},
+
+		appendTo: function(parent){
+			parent.appendChild(this);
+			return this;
+		},
+		
 		/**
 		 * 集成了各种与offset相关的方法
 		 * 
@@ -290,7 +400,7 @@
 					left += el.offsetLeft || 0;
 
 					if (el.offsetParent === body &&
-							Jaring.dom.style(el, 'position') === 'absolute') {
+							Jaring.dom.css(el, 'position') === 'absolute') {
 						break;
 					}
 					el = el.offsetParent;
@@ -350,19 +460,26 @@
 				scrollTop  = body.scrollTop;
 			}
 			return new Jaring.maps.Offset(scrollLeft, scrollTop);
+		},
+
+		/**
+		 * 禁用页面文本选择
+		 * 
+		 * @return {[type]} [description]
+		 */
+		disableTextSelection: function () {
+			if (document.selection && document.selection.empty) {
+				document.selection.empty();
+			}
+			if (!this._jaring_onselect_start_) {
+				this._jaring_onselect_start_ = document.onselectstart;
+				document.onselectstart = Jaring.falseFn;
+			}
+		},
+
+		enableTextSelection: function () {
+			document.onselectstart = this._jaring_onselect_start_;
+			this._jaring_onselect_start_ = null;
 		}
 	}
 })();
-
-//测试代码
-console.log('Jaring.dom tester : begin');
-
-window.onload = function(){
-	console.log(Jaring.dom.get('map').offset(true));
-
-
-}
-
-console.log(Jaring.dom.create('div').addClass('CrossYou').addClass('test').offset(new Jaring.maps.Offset(22,33)).offset(true));
-
-console.log('Jaring.dom tester : end');

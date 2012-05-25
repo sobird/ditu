@@ -1,3 +1,10 @@
+/**
+ * 地图事件类标准化封装
+ * 
+ * @author junlong.yang CrossYou2009@gmail.com
+ * @version $Id$
+ */
+
 (function(){
 	Jaring.create('Jaring.maps.Event', {
 		/**
@@ -41,12 +48,28 @@
 			}
 		},
 
+		/**
+		 * 获取鼠标事件触发时的X坐标值,单位:像素
+		 * 
+		 * 传参情况说明:
+		 * 1.(event)
+		 * 2.()
+		 * 
+		 * @param  {event/none} event/none [鼠标事件]
+		 * @return {Number} x [X像素坐标值]
+		 */
 		x: function(event){
 			var event = event ? (event.originalEvent || event) : this.originalEvent;
 				
 			return event.pageX ? (event.pageX || 0) : (event.clientX || 0) + Jaring.dom.scroll().left;
 		},
 
+		/**
+		 * 类似 x()
+		 * 
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
 		y: function(event){
 			var event = event ? (event.originalEvent || event) : this.originalEvent;
 				
@@ -88,6 +111,13 @@
 			return this;
 		},
 
+		/**
+		 * 阻止事件
+		 * 包括阻止浏览器默认行为, 阻止事件冒泡
+		 * 
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
 		stop: function(event){
 			var event = event ? (event.originalEvent || event) : this.originalEvent;
 			return this.preventDefault().stopPropagation();
@@ -135,6 +165,18 @@
 			return this.resolveTextNode(target)
 		},
 
+		/**
+		 * 
+		 * 传参情况说明:
+		 * 1.(event,element)
+		 * 2.(element)
+		 * 3.(event)
+		 * 4.()
+		 * 
+		 * @param  {[type]} mix       [description]
+		 * @param  {[type]} container [description]
+		 * @return {[type]}           [description]
+		 */
 		offsetBy: function(mix, container){
 			var event = container ? mix : this,
 				container = container || mix,
@@ -144,7 +186,13 @@
 			return new Jaring.maps.Offset(this.x - offset.left, this.y - offset.top);
 		},
 
-		//swallow then digest
+		/**
+		 * 吞掉一些属性,消化成自己的属性
+		 * swallow then digest
+		 * 
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
 		swallow: function(event){
 			Jaring.util.extendIf(this, event);
 
@@ -153,9 +201,3 @@
 		}
 	});
 })();
-
-//test script
-console.log('Jaring.maps.Event : begin');
-
-
-console.log('Jaring.maps.Event : end');

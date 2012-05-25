@@ -41,7 +41,6 @@
 		 * @return {Undefined} [description]
 		 */
 		addDomListenerOnce: function(instance, eventName, handler, capture){
-			console.log(this);
 			var listener = this.addDomListener(instance, eventName, function(){
 				listener.remove();
 				handler.apply(instance, arguments);
@@ -121,10 +120,13 @@
 		 * 
 		 * @param  {Object} instance  [description]
 		 * @param  {String} eventName [description]
-		 * @param  {*} var_args  [description]
+		 * @param  {*} event  [description]
 		 * @return {Undefined           [description]
 		 */
-		trigger: function(instance, eventName, var_args){
+		trigger: function(instance, eventName, event){
+			if(event instanceof Jaring.maps.Event){
+				event.type = eventName;
+			}
 			var _events = instance.__events_;
 			if(_events && _events[eventName]) {
 				var _args = Array.prototype.slice.call(arguments, 2),

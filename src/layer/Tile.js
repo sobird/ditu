@@ -72,8 +72,7 @@
 
 				layer.fire('tileload', new Jaring.maps.Event(rawEvent).swallow({
 					tile:this,
-					src: this.src,
-					type: 'tileload'
+					src: this.src
 				}));
 			};
 
@@ -88,12 +87,10 @@
 
 				this.className += ' jaring-tile-error';
 
-				layer.fire('tileerror', {
-					originalEvent: rawEvent,
+				layer.fire('tileerror', new Jaring.maps.Event(rawEvent).swallow({
 					tile:this,
-					src: this.src,
-					type: 'tileload'
-				});
+					src: this.src
+				}));
 			};
 
 			image.src		= options.src;

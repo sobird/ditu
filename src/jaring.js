@@ -14,5 +14,9 @@
 
 		noConflict: function(){},
 
-		emptyFn: function(){}
+		emptyFn: function(){},
+
+		falseFn: function(){
+			return false;
+		}
 	},window);
