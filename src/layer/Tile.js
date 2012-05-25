@@ -76,7 +76,7 @@
 				}));
 			};
 
-			image.onerror 	= function(e){
+			image.onerror 	= function(rawEvent){
 				//TODO 切片Tile加载出错
 				/**
 				 * 设置切片当前状态值

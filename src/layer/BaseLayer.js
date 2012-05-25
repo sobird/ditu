@@ -14,7 +14,7 @@
 		 */
 		add: function(tile){
 			this.on('tileload', function(e){
-				console.log(e);
+				
 			});
 			this.tileHash.set(tile.__uuid, tile.load(this));
 			
@@ -67,5 +67,3 @@
 		},
 	});
 })();
-
-console.log(new Jaring.maps.BaseLayer());

@@ -159,6 +159,8 @@
 						elem.style[prop] = value;
 					}
 
+					return elem;
+
 			} else if(Jaring.util.is(last, 'object') && (last instanceof Object)) {//setStyles
 				if(args.length = 1) {
 					args.unshift(this);
@@ -305,6 +307,33 @@
 				}
 
 				return new Jaring.maps.Size(el.clientWidth||0, el.clientHeight||0);
+			}
+		},
+
+		/**
+		 * 设置/获取元素的 innerHTML
+		 * 
+		 * 传参情况说明
+		 * 1.(el, html) setHtml
+		 * 2.(html) setHtml
+		 * 3.(el) getHtml
+		 * 4.() getHtml
+		 * 
+		 * @param  {[type]} el   [description]
+		 * @param  {[type]} html [description]
+		 * @return {[type]}      [description]
+		 */
+		html: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = args[args.length - 1];
+
+			if(Jaring.util.is(last, 'string')){//setHtml
+				var el = Jaring.util.is(args[0], 'string') ? this : args[0];
+				el.innerHTML = last;
+				return el;
+			} else {
+				var el = last || this;
+				return el.innerHTML;
 			}
 		},
 

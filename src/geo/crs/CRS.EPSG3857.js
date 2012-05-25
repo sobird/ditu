@@ -50,7 +50,3 @@ Jaring.CRS.EPSG3857 = Jaring.util.extend({}, Jaring.CRS, {
 Jaring.CRS.EPSG900913 = Jaring.util.extend({}, Jaring.CRS.EPSG3857, {
 	code: 'EPSG:900913'
 });
-
-// 测试一下 ~~
-var point = Jaring.CRS.EPSG3857.latLngToPoint(new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627), 13);
-console.log(point);

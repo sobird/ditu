@@ -59,8 +59,6 @@
 Jaring.maps.Map.addInitHook(function(){
 	var layerMgr = new Jaring.maps.LayerMgr();
 
-
-console.log(layerMgr);
 	/**
 	 * 该方法将作为用户API对外提供使用
 	 * 
