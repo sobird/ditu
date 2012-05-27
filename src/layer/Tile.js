@@ -52,7 +52,9 @@
 			var image = new Image(),
 				style = image.style,
 				options = this.options;
-
+				image.onselectstart = image.onmousemove = function(){
+					return false;
+				};
 			style.cssText   = 'position:absolute;';	
 			style.width		= options.size.width + 'px';
 			style.height	= options.size.height + 'px';

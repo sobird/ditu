@@ -8,7 +8,7 @@
 	 * @author junlong.yang CrossYou2009@gmail.com
 	 * @version $Id$
 	 */
-	Jaring.create('Jaring.maps.LayerMgr', {
+	Jaring.create('Jaring.maps.LayerMgr extends Jaring.MVCObject', {
 		LayerMgr: function(map) {
 			/**
 			 * 图层管理器当前执行阶段 状态码
@@ -36,7 +36,7 @@
 			 */
 			this.layerHash = new Jaring.maps.Hash();
 
-			this.container = Jaring.dom.create('div');
+			this.container = Jaring.dom.create('div').addClass('jaring-layer-mgr').appendTo(this.map.platform);
 
 		},
 
@@ -46,8 +46,12 @@
 		 * @param {TileLayer} layer [description]
 		 */
 		add: function(layer) {
+			layer.init(this);
 			this.layerHash.set(layer.__uuid, layer);
-			layer.add(new Jaring.maps.Tile());
+			
+
+			this.fire('layeradd', {layer: layer});
+			this.reader();
 		},
 
 		/**
@@ -57,7 +61,7 @@
 		 * @return {[type]}       [description]
 		 */
 		remove: function(layer) {
-
+			this.layerHash.remove();
 		},
 
 		/**
@@ -69,18 +73,12 @@
 
 		},
 
-		/**
-		 * 更新图层管理器
-		 *
-		 * @return {[type]} [description]
-		 */
-		update: function() {
-			var mapObj = this.map,
+		reader: function(){
+			var _self = this,
+				mapObj = this.map,
 				pixelCenter = mapObj.getPixelCenter(),
 				pixelBounds = mapObj.getPixelBounds(),
 				zoom = mapObj.getZoom();
-
-
 
 			var northWest = {
 				row: Math.floor(pixelBounds.northWest.x / 256),
@@ -91,58 +89,19 @@
 				column: Math.floor(pixelBounds.southEast.y / 256)
 			};
 
-			var fragment = document.createDocumentFragment();
-			for (var row = northWest.row; row <= southEast.row; row++) {
-				for (var column = northWest.column - 1; column <= southEast.column; column++) {
-					var src = 'http://dev.crossyou.cn/misc/map/x=' + row + ';y=' + column + ';z=' + zoom + ';type=web;for=jaring';
-					var tile = new Jaring.maps.Tile({
-						src: src,
-						offset: this.getTileOffset(new Jaring.maps.Point(row, column))
-					}).load();
-					fragment.appendChild(tile.image);
-				}
-			}
-			mapObj.platform.append(fragment);
 
+			this.layerHash.each(function(pairs){
+				var layer = pairs.value;
+				layer.reader(northWest, southEast, zoom);
+			});
 		},
 
 		/**
-		 * 切片由中心点向外 扩散添加
-		 *
+		 * 刷新管理器中的图层
+		 * 
 		 * @return {[type]} [description]
 		 */
-		fromCenterToOut: function(pixelBounds, pixelCenter) {
-
-		},
-
-		getTileOffset: function(tilePoint){
-			var initialNorthWestPoint = this.map._initial.northWestPoint;
-
-			return tilePoint.multiplyBy(256).subtract(initialNorthWestPoint).toOffset();
-		},
-
-		/**
-		 * 渲染图层管理器中的图层
-		 *
-		 * @return {[type]} [description]
-		 */
-		renderLayer: function(layer) {
-			//TODO 从地图的左上角向右下角逐个渲染
-			for (var row = this.northwest.row; row <= this.southeast.row; row++) {
-				for (var column = this.northwest.column - 1; column <= this.southeast.column; column++) {
-					if (row >= 0 && row < Math.pow(2, this.level)) {
-						layer.add(new Jaring.maps.Tile());
-					}
-				}
-			}
-		},
-
-		/**
-		 * 渲染切片
-		 *
-		 * @return {[type]} [description]
-		 */
-		renderTile: function() {
+		refresh: function(){
 
 		}
 	});
@@ -150,9 +109,7 @@
 
 Jaring.maps.Map.addInitHook(function() {
 	//对图层管理器进行示例化
-	var layerMgr = new Jaring.maps.LayerMgr(this);
-	layerMgr.update();
-	console.log(this._initial);
+	var layerMgr = new Jaring.maps.LayerMgr(this).add(new Jaring.maps.TileLayer());
 	/**
 	 * 该方法将作为用户API对外提供使用
 	 *

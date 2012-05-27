@@ -194,6 +194,15 @@
 
 		//--------------------------------------------------------------
 		/**
+		 * 注册原生事件处理程序
+		 * 
+		 * @return {[type]} [description]
+		 */
+		regRawEventHandler: function(){
+
+		},
+		
+		/**
 		 * 初始化为地图添加的钩子函数
 		 *
 		 * @return {none} [description]
