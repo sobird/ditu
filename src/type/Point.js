@@ -1,7 +1,7 @@
 (function(){
 	Jaring.create('Jaring.maps.Point',{
 		/**
-		 * 一个两维平面上的点; 地理像素点
+		 * 一个两维平面上的点;
 		 * A point on a two-dimensional plane.
 		 * 单位(unit): 像素(pixel)
 		 * 
@@ -34,6 +34,10 @@
 		 */
 		toString: function(){
 			return '(' + this.x + ', ' + this.y + ')';
+		},
+
+		toOffset: function(){
+			return new Jaring.maps.Offset(this.x, this.y);
 		},
 
 		//Math 一些数学计算方法

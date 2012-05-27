@@ -53,7 +53,7 @@
 				style = image.style,
 				options = this.options;
 
-			style.cssText   = '';	
+			style.cssText   = 'position:absolute;';	
 			style.width		= options.size.width + 'px';
 			style.height	= options.size.height + 'px';
 			style.top		= options.offset.top  + 'px';
@@ -70,10 +70,10 @@
 
 				this.className += ' jaring-tile-loaded';
 
-				layer.fire('tileload', new Jaring.maps.Event(rawEvent).swallow({
-					tile:this,
-					src: this.src
-				}));
+				// layer.fire('tileload', new Jaring.maps.Event(rawEvent).swallow({
+				// 	tile:this,
+				// 	src: this.src
+				// }));
 			};
 
 			image.onerror 	= function(rawEvent){

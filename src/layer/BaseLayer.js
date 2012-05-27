@@ -13,9 +13,6 @@
 		 * 添加一个切片对象到当前图层对象
 		 */
 		add: function(tile){
-			this.on('tileload', function(e){
-				
-			});
 			this.tileHash.set(tile.__uuid, tile.load(this));
 			
 		},

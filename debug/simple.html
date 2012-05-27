@@ -8,13 +8,15 @@
 
 </head>
 <body>
-<div id="map" style="height:400px; width:500px;"></div>
+<div id="map" style="height:400px; width:500px; border: 1px solid #ccc;"></div>
 
 <script type="text/javascript">
 var mapObj = new Jaring.maps.Map('map',{
 	
 });
 console.log(mapObj);
+
+console.log(mapObj.getCenter());
 </script>
 </body>
 </html>

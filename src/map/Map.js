@@ -35,6 +35,7 @@
 			this.container = Jaring.dom.get(container);
 
 			this.size = this.container.size();
+			this.halfSize = this.size.divideBy(2);
 
 
 
@@ -48,8 +49,6 @@
 			 * 初始化 Map Hooks
 			 */
 			this._initHooks(options);
-
-
 		},
 
 
@@ -126,16 +125,29 @@
 
 		panToBounds: function(bounds) {},
 
-		//Methods that get map state
-		getCenter: function() {
-
-		},
-
 		getZoom: function() {
 			return this.zoom;
 		},
 
-		getBounds: function() {},
+		getCenter: function(unbounded) { // (Boolean) -> LatLng
+			return this.fromPixelToLngLat(this.getPixelCenter(), this.zoom, unbounded);
+		},
+
+		/**
+		 * 返回当前地图视图窗口的经纬度坐标范围
+		 * Returns the lat/lng bounds of the current viewport.
+		 * If the map is not yet initialized (i.e. the mapType is still null),
+		 * or center and zoom have not been set then the result is null or undefined.
+		 *
+		 * @return {Jaring.maps.Bounds} bounds [description]
+		 */
+		getBounds: function() {
+			var pixelBounds = this.getPixelBounds(),
+				southWestLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(pixelBounds.northWestPoint.x, pixelBounds.southEastPoint.y), this.zoom, true);
+			northEastLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(pixelBounds.southEastPoint.x, pixelBounds.northWestPoint.y), this.zoom, true);
+
+			return new Jaring.maps.Bounds(southWestLngLat, northEastLngLat);
+		},
 
 		/**
 		 * 根据相对地图容器的像素坐标获取地理坐标.
@@ -249,6 +261,31 @@ Jaring.maps.Map.addInitHook(function(options) {
 		};
 
 	/**
+	 * 获取当前地图视图左上角的地理像素坐标
+	 *
+	 * @author junlong.yang
+	 * @since 1.0.0
+	 * @access private
+	 * @return {Jaring.maps.Point} point [description]
+	 */
+	var getTopLeftPoint = function() {
+		//TODO 暂时这样
+		return _self._initial.northWestPoint;
+	};
+
+	this.getPixelCenter = function(){
+		return getTopLeftPoint().plus(this.halfSize.toPoint());
+	},
+
+	this.getPixelBounds = function() {
+		var northWestPoint = getTopLeftPoint();
+		return {
+			'northWest': northWestPoint,
+			'southEast': northWestPoint.plus(this.size.toPoint())
+		};
+	},
+
+	/**
 	 * 当地图中心点发生变化, 事件处理程序
 	 *
 	 * @param  {[type]} event [description]
@@ -262,13 +299,15 @@ Jaring.maps.Map.addInitHook(function(options) {
 			initial.center = this.center;
 			initial.zoom = this.zoom;
 
-			initial.centerPoint = this.fromLngLatToPixel(initial.center);
+			initial.pixelCenter = this.fromLngLatToPixel(initial.center);
 
-			initial.northWestPoint = initial.centerPoint.subtract(this.size.divideBy(2).toPoint())._round();
-			initial.southEastPoint = initial.northWestPoint.plus(this.size.toPoint())._round();
+			initial.northWestPoint = initial.pixelCenter.subtract(this.size.divideBy(2).toPoint());
+			initial.southEastPoint = initial.northWestPoint.plus(this.size.toPoint());
 
 			initial.southWestLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.northWestPoint.x, initial.southEastPoint.y), this.zoom, true);
 			initial.northEastLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.southEastPoint.x, initial.northWestPoint.y), this.zoom, true);
+
+			this.phase = 2;
 		}
 	};
 
