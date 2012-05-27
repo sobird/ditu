@@ -31,6 +31,6 @@ Jaring.Projection.SphericalMercator = {
 			lng = point.x * d,
 			lat = (2 * Math.atan(Math.exp(point.y)) - (Math.PI / 2)) * d;
 
-		return new Jaring.maps.LngLat(lat, lng, unbounded);
+		return new Jaring.maps.LngLat(lng, lat, unbounded);
 	}
 };

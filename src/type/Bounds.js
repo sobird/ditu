@@ -3,19 +3,23 @@
 		/**
 		 * 此类表示地理坐标的矩形区域。
 		 * Constructs a rectangle from the points at its south-west and north-east corners.
+		 * A LatLngBounds instance represents a rectangle in geographical coordinates, 
+		 * including one that crosses the 180 degrees longitudinal meridian.
 		 * 
-		 * @param {LngLat} sw [description]
-		 * @param {LngLat} ne [description]
+		 * @see  https://developers.google.com/maps/documentation/javascript/reference?hl=zh-CN#LatLngBounds
+		 * 
+		 * @param {LngLat} southWest [description]
+		 * @param {LngLat} northEast [description]
 		 */
-		Bounds: function(sw, ne){
-			sw && !ne && (ne = sw);
-			if(sw) {
-				var swLat = Math.max(sw.lat(), -90),
-					swLat = Math.min(sw.lat(),  90);
-				var neLat = Math.max(ne.lat(), -90),
-					neLat = Math.min(ne.lat(),  90);
+		Bounds: function(southWest, northEast){
+			southWest && !northEast && (northEast = southWest);
+			if(southWest) {
+				var swLat = Math.max(southWest.lat(), -90),
+					swLat = Math.min(southWest.lat(),  90);
+				var neLat = Math.max(northEast.lat(), -90),
+					neLat = Math.min(northEast.lat(),  90);
 				this.latline = new LatLine(swLat, neLat);
-				var swLng = sw.lng;
+				var swLng = southWest.lng;
 				var neLng = ng.lng;
 				if(neLng - swLng >= 360){
 					this.lngline = new LngLine(-180, 180);
@@ -68,6 +72,10 @@
 
 		getSouthWest: function(){
 			return new Jaring.maps.LngLat(this.latline.swLat, this.lngline.swLat, true);
+		},
+
+		intersects: function(){
+
 		},
 
 		toSpan: function(){

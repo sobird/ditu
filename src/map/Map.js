@@ -8,6 +8,13 @@
 		_hooks: [],
 
 		/**
+		 * 地图初始属性值
+		 *
+		 * @type {Object}
+		 */
+		_initial: {},
+
+		/**
 		 * 地图各个阶段的状态值
 		 *
 		 * @type {Number}
@@ -29,43 +36,23 @@
 
 			this.size = this.container.size();
 
-			var _self = this,
 
-				defaults = {
-					/**
-					 * 该地图所使用的 参考坐标系
-					 *
-					 * @type {CRS}
-					 */
-					CRS: Jaring.CRS.EPSG3857,
 
-					/**
-					 * 地图背景颜色
-					 *
-					 * @type {String}
-					 */
-					backgroundColor: '#ccc',
-
-					/**
-					 * 地图中心点坐标
-					 *
-					 * @type {LngLat}
-					 */
-					center: new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627),
-					draggable: true,
-					mixZoom: 3,
-					maxZoom: 18,
-				};
-
-			this.setValues(Jaring.util.extend({}, defaults, options));
+			/**
+			 * 初始化一个地图容器
+			 *
+			 */
 			this.init();
+
 			/**
 			 * 初始化 Map Hooks
 			 */
-			this._initHooks();
+			this._initHooks(options);
 
-			this.addLayer(new Jaring.maps.TileLayer());
+
 		},
+
+
 
 		/**
 		 * 地图对象初始化
@@ -112,14 +99,20 @@
 		 *
 		 * @param {LngLat} center [经纬坐标 类]
 		 */
-		setCenter: function(center) {},
+		setCenter: function(center) {
+			this.set('center', center);
+		},
 
 		/**
 		 * 设置地图的缩放级别。
 		 *
 		 * @param {Number} zoom [缩放级别]
 		 */
-		setZoom: function(zoom) {},
+		setZoom: function(zoom) {
+			if (zoom >= this.mixZoom && zoom <= this.maxZoom) {
+				this.set('zoom', zoom);
+			}
+		},
 
 		fitBounds: function(bounds) {},
 
@@ -134,9 +127,13 @@
 		panToBounds: function(bounds) {},
 
 		//Methods that get map state
-		getCenter: function() {},
+		getCenter: function() {
 
-		getZoom: function() {},
+		},
+
+		getZoom: function() {
+			return this.zoom;
+		},
 
 		getBounds: function() {},
 
@@ -147,7 +144,7 @@
 		 *
 		 * @return {[type]} [description]
 		 */
-		fromContainerPixelToLatLng: function() {},
+		fromContainerPixelToLngLat: function() {},
 
 		/**
 		 * 根据地理坐标获取相对地图容器的像素坐标.
@@ -156,9 +153,32 @@
 		 *
 		 * @return {[type]} [description]
 		 */
-		fromLatLngToContainerPixel: function() {},
-		fromLatLngToPixel: function() {},
-		fromPixelToLatLng: function() {},
+		fromLngLatToContainerPixel: function() {},
+
+		/**
+		 * 将经纬坐标转换为地理像素坐标
+		 *
+		 * @param  {[type]} lnglat [description]
+		 * @param  {[type]} zoom   [description]
+		 * @return {[type]}        [description]
+		 */
+		fromLngLatToPixel: function(lnglat, zoom) {
+			zoom = Jaring.util.is(zoom, 'undefined') ? this.zoom : zoom;
+			return this.CRS.lngLatToPoint(lnglat, zoom);
+		},
+
+		/**
+		 * 根据地理像素坐标转换为经纬坐标
+		 *
+		 * @param  {[type]} point     [description]
+		 * @param  {[type]} zoom      [description]
+		 * @param  {[type]} unbounded [description]
+		 * @return {[type]}           [description]
+		 */
+		fromPixelToLngLat: function(point, zoom, unbounded) {
+			zoom = Jaring.util.is(zoom, 'undefined') ? this.zoom : zoom;
+			return this.CRS.pointToLngLat(point, zoom, unbounded);
+		},
 
 		//--------------------------------------------------------------
 		/**
@@ -166,9 +186,9 @@
 		 *
 		 * @return {none} [description]
 		 */
-		_initHooks: function() {
+		_initHooks: function(options) {
 			for (var i = 0, len = this._hooks.length; i < len; i++) {
-				this._hooks[i].call(this);
+				this._hooks[i].call(this, options);
 			}
 		},
 
@@ -192,7 +212,71 @@
 	});
 })();
 
-//添加一个地图钩子测试
-Jaring.maps.Map.addInitHook(function() {
+//添加地图的第一个钩子
+Jaring.maps.Map.addInitHook(function(options) {
+	var _self = this,
 
+		defaults = { //这个是有先后顺序的
+			/**
+			 * 该地图所使用的 参考坐标系
+			 *
+			 * @type {CRS}
+			 */
+			CRS: Jaring.CRS.EPSG3857,
+
+			/**
+			 * 地图背景颜色
+			 *
+			 * @type {String}
+			 */
+			backgroundColor: '#ccc',
+
+			mixZoom: 3,
+
+			maxZoom: 18,
+
+			zoom: 16,
+
+			/**
+			 * 地图中心点坐标
+			 *
+			 * @type {LngLat}
+			 */
+			center: new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627),
+
+			draggable: true,
+
+		};
+
+	/**
+	 * 当地图中心点发生变化, 事件处理程序
+	 *
+	 * @param  {[type]} event [description]
+	 * @return {[type]}       [description]
+	 */
+	this.onCenterChanged = function(event) {
+		if (Jaring.util.is(event.oldValue, 'undefined')) {
+			//TODO 地图第一次加载, 中心点相关的初始化工作
+			var initial = this._initial;
+
+			initial.center = this.center;
+			initial.zoom = this.zoom;
+
+			initial.centerPoint = this.fromLngLatToPixel(initial.center);
+
+			initial.northWestPoint = initial.centerPoint.subtract(this.size.divideBy(2).toPoint())._round();
+			initial.southEastPoint = initial.northWestPoint.plus(this.size.toPoint())._round();
+
+			initial.southWestLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.northWestPoint.x, initial.southEastPoint.y), this.zoom, true);
+			initial.northEastLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.southEastPoint.x, initial.northWestPoint.y), this.zoom, true);
+		}
+	};
+
+	this.onZoomChanged = function(event) {
+		//alert(this.zoom);
+	};
+
+
+	//为地图设置 options 属性值
+	this.setValues(Jaring.util.extend({}, defaults, options));
 });

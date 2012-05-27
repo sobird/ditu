@@ -13,7 +13,7 @@ Jaring.CRS = {
 	 * @param  {Number} zoom [缩放级别]
 	 * @return {Point} point [new Jaring.maps.Point()]
 	 */
-	latLngToPoint: function (lnglat, zoom) {
+	lngLatToPoint: function (lnglat, zoom) {
 		var projectedPoint = this.projection.project(lnglat),
 		    scale = this.scale(zoom);
 
@@ -28,7 +28,7 @@ Jaring.CRS = {
 	 * @param  {Boolean} unbounded [description]
 	 * @return {LngLat}           [new Jaring.maps.LngLat()]
 	 */
-	pointToLatLng: function (point, zoom, unbounded) {
+	pointToLngLat: function (point, zoom, unbounded) {
 		var scale = this.scale(zoom),
 		    untransformedPoint = this.transformation.untransform(point, scale);
 

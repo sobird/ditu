@@ -1,6 +1,6 @@
 (function(){
 	/**
-	 * 这是图层的基础类
+	 * 图层类
 	 * 
 	 * 该类实例化后，可以被添加到LayerMgr(图层管理器)对象中
 	 */
@@ -18,11 +18,6 @@
 			});
 			this.tileHash.set(tile.__uuid, tile.load(this));
 			
-		},
-
-		test_changed: function(e){
-
-			alert(e);
 		},
 
 		remove: function(tile){
