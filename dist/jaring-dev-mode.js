@@ -64,7 +64,7 @@
 
 	require('geo/projection/Projection.js'),
 	require('geo/projection/Projection.SphericalMercator.js'),
-	require('geo/projection/Projection.LonLat.js'),
+	require('geo/projection/Projection.LngLat.js'),
 	require('geo/projection/Projection.Mercator.js'),
 
 	require('geo/crs/CRS.js'),

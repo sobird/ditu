@@ -11,12 +11,14 @@
 	Jaring.dom = {
 		get: function(id){
 			var el = (typeof id === 'string' ? document.getElementById(id) : id);
+			el.__jaring_property_ = el.__jaring_property_ || {};
 			Jaring.util.extendIf(el, this);
 			return el;
 		},
 
 		create: function(tagName){
 			var el = document.createElement(tagName);
+			el.__jaring_property_ = el.__jaring_property_ || {};
 			Jaring.util.extendIf(el, this);
 			return el;
 		},

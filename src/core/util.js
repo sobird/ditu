@@ -85,6 +85,9 @@
 				}
 			} else {
 				// Hashtables
+				if(object.__jaring_property_){//这是一个DOM对象
+					object = object.__jaring_property_;
+				}
 				for (n in object) {
 					if (object.hasOwnProperty(n)) {
 						if (callback.call(scope, object[n], n, object) === false)
@@ -136,25 +139,43 @@
 			var i, l;
 
 			for (i = 1, l = arguments.length; i < l; i++) {
-				this.each(arguments[i], function(value, property) {
+				var source = arguments[i];
+				if(source && source['__jaring_property_']){
+					source = source.__jaring_property_;
+				}
+
+				for(var property in source){
+					var value = source[property];
 					if (value !== undefined){
 						destination[property] = value;
+						if(destination.__jaring_property_){
+							destination.__jaring_property_[property] = value;
+						}
 					}
-				});
+				}
 			}
 
 			return destination;
 		},
 
 		extendIf: function(destination) {
-			var i, l;
+			var i, l;//TODO 暂时先这样IE下扩展DOM对象存在问题,此处暂时这样做兼容性处理
 
 			for (i = 1, l = arguments.length; i < l; i++) {
-				this.each(arguments[i], function(value, property) {
+				var source = arguments[i];
+				if(arguments[i].__jaring_property_){
+					source = arguments[i].__jaring_property_;
+				}
+
+				for(var property in source){
+					var value = source[property];
 					if (value !== undefined && destination[property] === undefined){
 						destination[property] = value;
+						if(destination.__jaring_property_){
+							destination.__jaring_property_[property] = value;
+						}
 					}
-				});
+				}
 			}
 
 			return destination;
