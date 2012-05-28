@@ -109,7 +109,8 @@
 
 Jaring.maps.Map.addInitHook(function() {
 	//对图层管理器进行示例化
-	var layerMgr = new Jaring.maps.LayerMgr(this).add(new Jaring.maps.TileLayer());
+	var layerMgr = new Jaring.maps.LayerMgr(this);
+	layerMgr.add(new Jaring.maps.TileLayer());
 	/**
 	 * 该方法将作为用户API对外提供使用
 	 *
@@ -122,9 +123,13 @@ Jaring.maps.Map.addInitHook(function() {
 	this.addLayer = function(layer) {
 		layerMgr.add(layer);
 
-	}
+	};
+
+	this.refreshLayer = function(){
+		layerMgr.reader();
+	};
 
 	this.removeLayer = function(layer) {
 		//TODO
-	}
+	};
 });

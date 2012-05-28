@@ -14,6 +14,8 @@
 			this.options = Jaring.util.extend({}, defaults, options);
 
 			this.tileHash = new Jaring.maps.Hash();
+
+			this.tiles = [];
 		},
 
 		init: function(layerMgr){
@@ -34,13 +36,14 @@
 			for (var row = northWest.row; row <= southEast.row; row++) {
 				for (var column = northWest.column - 1; column <= southEast.column; column++) {
 					var tilePoint = new Jaring.maps.Point(row, column);
-					
-					var tile = new Jaring.maps.Tile({
-						src: this.getTileUrl(tilePoint,zoom),
-						offset: this.getTileOffset(tilePoint)
-					}).load();
-
-					fragment.appendChild(tile.image);
+					if(!(this.tileHash.get(row + '_' +column) == true)){
+						var tile = new Jaring.maps.Tile({
+							src: this.getTileUrl(tilePoint,zoom),
+							offset: this.getTileOffset(tilePoint)
+						}).load();
+						this.tileHash.set(row + '_' +column, true);
+						fragment.appendChild(tile.image);
+					}
 				}
 			}
 			this.container.append(fragment);

@@ -20,6 +20,10 @@ var mapObj = new Jaring.maps.Map('map',{
 	
 });
 
+window.onresize = function(){
+	var size = Jaring.dom.size(document);
+	mapObj.setSize(size);
+}
 </script>
 </body>
 </html>

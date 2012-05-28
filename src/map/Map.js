@@ -103,6 +103,15 @@
 		},
 
 		/**
+		 * 设置地图大小
+		 * 
+		 */
+		setSize: function(width, height){
+			var size = height ? new Jaring.maps.Size(width, height) : width;
+			this.set('size', size);
+		},
+
+		/**
 		 * 设置地图的缩放级别。
 		 *
 		 * @param {Number} zoom [缩放级别]
@@ -322,6 +331,15 @@ Jaring.maps.Map.addInitHook(function(options) {
 
 	this.onZoomChanged = function(event) {
 		//alert(this.zoom);
+	};
+
+	this.onSizeChanged = function(event){
+		if (Jaring.util.is(event.oldValue, 'undefined')) {
+
+		} else {
+			this.refreshLayer();
+			this.container.size(this.size);
+		}
 	};
 
 
