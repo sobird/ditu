@@ -50,6 +50,13 @@
 			return -1;
 		},
 
+		/**
+		 * 柯里化(currying) bind方法
+		 * 
+		 * @param  {Function} fn    [description]
+		 * @param  {Scope}   scope [description]
+		 * @return {Function} fn    [description]
+		 */
 		bind: function(fn, scope){
 			if (2 < arguments.length) {
 				var _t_args = Array.prototype.slice.call(arguments, 2);
@@ -144,7 +151,7 @@
 
 			for (i = 1, l = arguments.length; i < l; i++) {
 				this.each(arguments[i], function(value, property) {
-					if (value !== undefined && destination[property] == undefined){
+					if (value !== undefined && destination[property] === undefined){
 						destination[property] = value;
 					}
 				});

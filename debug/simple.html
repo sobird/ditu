@@ -3,14 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>一个简单的地图</title>
-<link rel="stylesheet" type="text/css" href="../src/css/jaring-map.css">
+<link rel="stylesheet" type="text/css" href="../assets/css/jaring-map.css">
 <script type="text/javascript" src="../dist/jaring-dev-mode.js?debug=true"></script>
 
 </head>
 <body>
-<div id="map" style="height:400px; width:500px; border: 1px solid #ccc;"></div>
+<div id="map" style="height:600px; width:1200px;"></div>
 
 <script type="text/javascript">
+
+console.log(Jaring.dom.size(document));
+var map = Jaring.dom.get('map').size(Jaring.dom.size(document));
+
+
+
 var mapObj = new Jaring.maps.Map('map',{
 	
 });

@@ -277,6 +277,48 @@
 			}
 		},
 
+		width: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = parseFloat(args[args.length - 1]);
+			if (Jaring.util.is(last, 'number') && !isNaN(last)){
+				var el = Jaring.util.is(args[0], 'number')? this : args[0];
+				el.style.width = last + 'px';
+				el._jaring_width_ = last;
+				return el;
+			} else {
+				var el = args[0] || this;
+				if (el._jaring_width_){
+					return el._jaring_width_;
+				}
+
+				if (el == document){
+					return Jaring.browser.msie ? (Jaring.browser.strict ? document.documentElement.clientWidth: document.body.clientWidth) : self.innerWidth;
+				}
+				return el.clientWidth;
+			}
+		},
+
+		height: function(){
+			var args = Array.prototype.slice.call(arguments, 0),
+				last = parseFloat(args[args.length - 1]);
+			if (Jaring.util.is(last, 'number') && !isNaN(last)){
+				var el = Jaring.util.is(args[0], 'number')? this : args[0];
+				el.style.height = last + 'px';
+				el._jaring_height_ = last;
+				return el;
+			} else {
+				var el = args[0] || this;
+				if (el._jaring_height_){
+					return el._jaring_height_;
+				}
+
+				if (el == document){
+					return Jaring.browser.msie ? (Jaring.browser.strict ? document.documentElement.clientHeight: document.body.clientHeight) : self.innerHeight;
+				}
+				return el.clientHeight;
+			}
+		},
+
 		/**
 		 * 返回/获取 DOM Element 的长度 宽度
 		 * 
@@ -296,8 +338,8 @@
 
 			if (last instanceof Jaring.maps.Size){
 				var el = (args[0] instanceof Jaring.maps.Size) ? this : args[0];
-				el.style.width = last.width + 'px';
-				el.style.height  = last.height  + 'px';
+				this.width(el, last.width);
+				this.height(el, last.height);
 				el._jaring_size_ = last;
 				return el;
 			} else {
@@ -306,7 +348,7 @@
 					return el._jaring_size_;
 				}
 
-				return new Jaring.maps.Size(el.clientWidth||0, el.clientHeight||0);
+				return new Jaring.maps.Size(this.width(el)||0, this.height(el)||0);
 			}
 		},
 

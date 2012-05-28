@@ -3,6 +3,8 @@
 		ua = na.userAgent;
 
 	Jaring.browser = {
+		strict: document.compatMode == "CSS1Compat",
+		
 		/**
 		 * Constant that is true if the browser is Opera.
 		 *

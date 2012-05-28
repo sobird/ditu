@@ -60,6 +60,7 @@
 			style.height	= options.size.height + 'px';
 			style.top		= options.offset.top  + 'px';
 			style.left   	= options.offset.left + 'px';
+			image.className = 'jaring-tile';
 			
 
 			image.onload 	= function(rawEvent){
