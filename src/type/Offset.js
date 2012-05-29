@@ -12,8 +12,12 @@
 			this.top = (round ? Math.round(top) : top);
 		},
 
-		equals: function(size){
-			return !size ? false : size.left == this.left && size.top == this.top;
+		equals: function(offset){
+			return !offset ? false : offset.left == this.left && offset.top == this.top;
+		},
+
+		clone: function(){
+			return new Jaring.maps.Offset(this.left, this.top);
 		},
 
 		toString: function(){
@@ -22,6 +26,15 @@
 
 		toPoint: function(){
 			return new Jaring.maps.Point(this.left, this.top);
+		},
+
+		plus: function(offset){
+			return this.clone()._plus(offset);
+		},
+		_plus: function(offset){
+			this.left += offset.left;
+			this.top += offset.top;
+			return this;
 		},
 	});
 })();

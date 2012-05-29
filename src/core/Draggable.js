@@ -1,75 +1,102 @@
 /**
- * DOM元素 拖放 类
+ * DOM元素 通用拖放 类
  */
-(function(){
-	Jaring.create('Jaring.Draggable extends Jaring.Observable',{
-		Draggable: function(dragElement, dragTarget){
+(function() {
+	/**
+	 * 鼠标按下 事件处理程序
+	 * 
+	 * @access private
+	 * @param  {Jaring.maps.Event} event [description]
+	 * @return {None}   [description]
+	 */
+	var onMouseDown = function(event) {
+
+		//阻止浏览器默认行为
+		event.preventDefault();
+
+		this.moved = false;
+		if (this.moving) {
+			return;
+		}
+
+		this._startOffset = this._lastOffset = this.dragElement.offset();
+		this._startPoint = new Jaring.maps.Point(event.x, event.y);
+
+
+		//给document添加 mousemove 和 mouseup 事件处理程序
+		this.dragingListener = Jaring.dom.on(document, 'mousemove', Jaring.util.bind(onMouseMove, this));
+		this.dragendListener = Jaring.dom.on(document, 'mouseup',   Jaring.util.bind(onMouseUp,   this));
+	};
+
+	var onMouseMove = function(event) {
+		
+		//阻止浏览器默认行为
+		event.preventDefault();
+
+		if (!this.moved) {
+			this.fire('dragstart');
+			this.moved = true;
+		}
+		this.moving = true;
+
+		var deltaOffset = new Jaring.maps.Point(event.x, event.y).subtract(this._startPoint).toOffset();
+
+		this._lastOffset = this._startOffset.plus(deltaOffset);
+
+		//console.log(this._newPos);
+		this.dragElement.offset(this._lastOffset);
+	};
+
+	var onMouseUp = function(e) {
+
+		Jaring.dom.un(this.dragingListener);
+		Jaring.dom.un(this.dragendListener);
+
+		this.dragingListener = null;
+		this.dragendListener = null;
+
+		if (this.moved) {
+			this.fire('dragend');
+		}
+		this.moving = false;
+	};
+
+	Jaring.create('Jaring.Draggable extends Jaring.Observable', {
+		Draggable: function(dragElement, dragTarget) {
 			this.map = dragElement;
 			this.dragElement = Jaring.dom.get(dragElement.platform);
-			this.dragTarget  = Jaring.dom.get(dragElement.container);
+			this.dragTarget = Jaring.dom.get(dragElement.container);
 		},
 
-		enable: function(){
+		/**
+		 * 启用鼠标拖放功能
+		 * 
+		 * @return {Jaring.Draggable} draggable [description]
+		 */
+		enable: function() {
 			if (this.enabled) {
+				//如果已经启用了, 则返回
 				return;
 			}
-			this.dragTarget.on('mousedown', Jaring.util.bind(this.onMouseDown, this));
+
+			//给要拖动的DOM对象添加 mousedown 事件
+			this.dragTarget.on('mousedown', Jaring.util.bind(onMouseDown, this));
 			this.enabled = true;
-			return this;
 		},
 
-		disable: function(){
+		/**
+		 * 禁用鼠标拖放功能
+		 * 
+		 * @return {[type]} [description]
+		 */
+		disable: function() {
 			if (!this.enabled) {
+				//如果未启用, 则返回
 				return;
 			}
-			this.dragTarget.un('mousedown');
+			this.dragTarget.un();
 			this.enabled = false;
-			this._moved = false;
-		},
-
-		onMouseDown: function(e){
-			e.preventDefault(e);
-			this._moved = false;
-			if (this._moving) {
-				return;
-			}
-
-
-			this._startPos = this._newPos = this.dragElement.offset().toPoint();
-			this._startPoint = new Jaring.maps.Point(e.x, e.y);
-			this.mousemoveListener = Jaring.event.addDomListener(document,'mousemove', Jaring.util.bind(this.onMouseMove, this));
-			this.mouseupListener = Jaring.event.addDomListener(document, 'mouseup', Jaring.util.bind(this.onMouseUp, this));
-		},
-
-		onMouseMove: function(e){
-			//console.log(e);
-			e.preventDefault(e);
-			if (!this._moved) {
-				this.fire('dragstart');
-				this._moved = true;
-			}
-			this._moving = true;
-
-			var newPoint = new Jaring.maps.Point(e.x, e.y);
-
-			this._newPos = this._startPos.plus(newPoint).subtract(this._startPoint).toOffset();
-
-			//console.log(this._newPos);
-			this.dragElement.offset(this._newPos);
-			this.map.refreshLayer();
-		},
-
-		onMouseUp: function(e){
-
-			Jaring.dom.un(this.mousemoveListener);
-			Jaring.dom.un(this.mouseupListener);
-			this.mousemoveListener = null;
-			this.mouseupListener = null;
-			
-			if (this._moved) {
-				this.fire('dragend');
-			}
-			this._moving = false;
+			this.moved = false;
 		}
 	})
 })();

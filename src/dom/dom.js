@@ -31,17 +31,22 @@
 				var el = this;
 				args.unshift(el);
 			} else {
-				var el = instance;
+				var el = args[0];
 			}
-			
-			return Jaring.event.addDomListener.apply(Jaring.event, args);
-			el.listener = listener;
+			el.listeners = el.listeners || [];
+
+			el.listeners.push(Jaring.event.addDomListener.apply(Jaring.event, args));
 			return el;
 		},
 
 		un: function(listener){
-			var listener = listener ? (listener.listener || listener) : this.listener;
-			Jaring.event.removeListener(listener);
+			var listeners = listener ? (listener.listeners || listener) : this.listeners;
+			if(!Jaring.util.is(listeners, 'array')){
+				listeners = [listeners];
+			}
+			for(var i = 0, l = listeners.length; i < l; i++){
+				Jaring.event.removeListener(listeners[i]);
+			}
 		},
 
 		/**
