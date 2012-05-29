@@ -75,6 +75,36 @@
 		 * @type Boolean
 		 * @final
 		 */
-		idevice: /(iPad|iPhone)/.test(ua)
+		idevice: /(iPad|iPhone)/.test(ua),
+
+		android: ua.indexOf("android") !== -1,
+
+		touch: (function () {
+			var touchSupported = false,
+				startName = 'ontouchstart';
+
+			// WebKit, etc
+			if (startName in document.documentElement) {
+				return true;
+			}
+
+			// Firefox/Gecko
+			var e = document.createElement('div');
+
+			// If no support for basic event stuff, unlikely to have touch support
+			if (!e.setAttribute || !e.removeAttribute) {
+				return false;
+			}
+
+			e.setAttribute(startName, 'return;');
+			if (typeof e[startName] === 'function') {
+				touchSupported = true;
+			}
+
+			e.removeAttribute(startName);
+			e = null;
+
+			return touchSupported;
+		}())
 	}
 })();

@@ -11,15 +11,15 @@
 	Jaring.dom = {
 		get: function(id){
 			var el = (typeof id === 'string' ? document.getElementById(id) : id);
-			el.__jaring_property_ = el.__jaring_property_ || {};
-			Jaring.util.extendIf(el, this);
+			//el.__jaring_property_ = el.__jaring_property_ || {};
+			Jaring.util.extendIf(el, this,'__jaring_property_');
 			return el;
 		},
 
 		create: function(tagName){
 			var el = document.createElement(tagName);
-			el.__jaring_property_ = el.__jaring_property_ || {};
-			Jaring.util.extendIf(el, this);
+			//el.__jaring_property_ = el.__jaring_property_ || {};
+			Jaring.util.extendIf(el, this,'__jaring_property_');
 			return el;
 		},
 
@@ -34,7 +34,7 @@
 				var el = instance;
 			}
 			
-			var listener = Jaring.event.addDomListener.apply(Jaring.event, args);
+			return Jaring.event.addDomListener.apply(Jaring.event, args);
 			el.listener = listener;
 			return el;
 		},

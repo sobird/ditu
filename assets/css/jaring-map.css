@@ -18,7 +18,9 @@ time,mark,audio,video{
 .jaring-map-container{
 	background:url(../img/grid.png);
 }
-
+.jaring-map-platform{
+	position: absolute;
+}
 .jaring-tile{
 	position:absolute;
 	-moz-user-select: none;

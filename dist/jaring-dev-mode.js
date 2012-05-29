@@ -43,6 +43,7 @@
 	require('jaring.js');
 
 	//Core 核心文件
+	require('core/constant.js');
 	require('core/util.js');
 	require('core/browser.js');
 	require('core/event.js');
@@ -61,7 +62,8 @@
 	require('type/Hash.js');
 
 	require('dom/dom.js');
-
+	require('core/Draggable.js');
+	
 	require('geo/projection/Projection.js'),
 	require('geo/projection/Projection.SphericalMercator.js'),
 	require('geo/projection/Projection.LngLat.js'),

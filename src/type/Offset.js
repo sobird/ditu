@@ -18,6 +18,10 @@
 
 		toString: function(){
 			return '(' + this.left + ', ' + this.top + ')';
-		}
+		},
+
+		toPoint: function(){
+			return new Jaring.maps.Point(this.left, this.top);
+		},
 	});
 })();

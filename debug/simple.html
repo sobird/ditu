@@ -19,7 +19,7 @@ var map = Jaring.dom.get('map').size(Jaring.dom.size(document));
 var mapObj = new Jaring.maps.Map('map',{
 	
 });
-
+new Jaring.Draggable(mapObj.platform,'map').enable();
 window.onresize = function(){
 	var size = Jaring.dom.size(document);
 	mapObj.setSize(size);

@@ -93,7 +93,7 @@
 			};
 			_self.unbind(key);
 			//绑定外部监听器
-			getBindings(_self)[key] = Jaring.event.addListener(target, eventName,handler);
+			getBindings(_self)[key] = this.on(target, eventName,handler);
 			setAccessor(_self, key, target, targetKey, noNotify);
 		},
 		
@@ -107,7 +107,7 @@
 			 if (_listener) {
 				 delete getBindings(this)[key];
 				 //移除外部绑定的监听器
-				 Jaring.event.removeListener(_listener);
+				 this.un(_listener);
 				 var _value = this.get(key);
 				 delete getAccessors(this)[key];
 				 this[key] = _value;
@@ -191,7 +191,7 @@
 			mvcObj['changed'](key, changeEvent);
 		}
 
-		//触发外部绑定的监听器
-		Jaring.event.trigger(mvcObj, key.toLowerCase() + "changed",changeEvent);//触发事件
+		//触发外部注册的观察者
+		mvcObj.fire(key.toLowerCase() + "changed",changeEvent);//触发事件
 	}
 })();

@@ -136,20 +136,45 @@
 		 * 简单的浅拷贝, 覆盖已经存在的属性
 		 */
 		extend: function(destination) {
-			var i, l;
+			//支持DOM对象的扩展 2012/05/28 by junlong.yang 暂不考虑IE6/7
+			if(!destination){
+				return;
+			}
 
-			for (i = 1, l = arguments.length; i < l; i++) {
-				var source = arguments[i];
-				if(source && source['__jaring_property_']){
-					source = source.__jaring_property_;
+			var args = Array.prototype.slice.call(arguments, 1),
+				last = args[args.length - 1];
+
+			if(Jaring.util.is(last, 'string')){
+				if(destination[last]){
+					return destination;
 				}
+				destination[last] = {};
+				args.pop();
 
-				for(var property in source){
-					var value = source[property];
-					if (value !== undefined){
-						destination[property] = value;
-						if(destination.__jaring_property_){
-							destination.__jaring_property_[property] = value;
+				for (var i = 0, l = args.length; i < l; i++) {
+					var source = args[i];
+					if(source && source[last]){
+						source = source[last];
+					}
+
+					for(var property in source){
+						var value = source[property];
+						if (value !== undefined){
+							destination[property] = value;
+							if(destination[last]){
+								destination[last][property] = value;
+							}
+						}
+					}
+				}
+			} else {
+				for (i = 0, l = args.length; i < l; i++) {
+					var source = args[i];
+
+					for(var property in source){
+						var value = source[property];
+						if (value !== undefined){
+							destination[property] = value;
 						}
 					}
 				}
@@ -159,20 +184,45 @@
 		},
 
 		extendIf: function(destination) {
-			var i, l;//TODO 暂时先这样IE下扩展DOM对象存在问题,此处暂时这样做兼容性处理
+			//支持DOM对象的扩展
+			if(!destination){
+				return;
+			}
 
-			for (i = 1, l = arguments.length; i < l; i++) {
-				var source = arguments[i];
-				if(arguments[i].__jaring_property_){
-					source = arguments[i].__jaring_property_;
+			var args = Array.prototype.slice.call(arguments, 1),
+				last = args[args.length - 1];
+
+			if(Jaring.util.is(last, 'string')){
+				if(destination[last]){
+					return destination;
 				}
+				destination[last] = {};
+				args.pop();
 
-				for(var property in source){
-					var value = source[property];
-					if (value !== undefined && destination[property] === undefined){
-						destination[property] = value;
-						if(destination.__jaring_property_){
-							destination.__jaring_property_[property] = value;
+				for (var i = 0, l = args.length; i < l; i++) {
+					var source = args[i];
+					if(source && source[last]){
+						source = source[last];
+					}
+
+					for(var property in source){
+						var value = source[property];
+						if (value !== undefined && destination[property] === undefined){
+							destination[property] = value;
+							if(destination[last]){
+								destination[last][property] = value;
+							}
+						}
+					}
+				}
+			} else {
+				for (i = 0, l = args.length; i < l; i++) {
+					var source = args[i];
+
+					for(var property in source){
+						var value = source[property];
+						if (value !== undefined && destination[property] === undefined){
+							destination[property] = value;
 						}
 					}
 				}

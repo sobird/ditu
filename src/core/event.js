@@ -17,16 +17,19 @@
 		 */
 		addDomListener: function(instance, eventName, handler, capture){
 			var listener = null;
+			var _filterEvent = function(event) {
+				return handler.call(this, new Jaring.maps.Event(event || window.event));
+			};
 			if (instance.addEventListener) {
 				var type = capture ? 4 : 1;
-				instance.addEventListener(eventName, handler, capture);
-				listener = new EventListener(instance, eventName, handler, type);
+				instance.addEventListener(eventName, _filterEvent, capture);
+				listener = new EventListener(instance, eventName, _filterEvent, type);
 			} else if (instance.attachEvent) {
-				listener = new EventListener(instance, eventName, handler, 2);
+				listener = new EventListener(instance, eventName, _filterEvent, 2);
 				instance.attachEvent('on' + eventName, fixListener(listener));
 			} else {
 				instance['on' + eventName] = handler;
-				listener = new EventListener(instance, eventName, handler, 3);
+				listener = new EventListener(instance, eventName, _filterEvent, 3);
 			}
 			return listener;
 		},
