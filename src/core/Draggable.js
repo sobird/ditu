@@ -4,8 +4,9 @@
 (function(){
 	Jaring.create('Jaring.Draggable extends Jaring.Observable',{
 		Draggable: function(dragElement, dragTarget){
-			this.dragElement = Jaring.dom.get(dragElement);
-			this.dragTarget  = Jaring.dom.get(dragTarget);
+			this.map = dragElement;
+			this.dragElement = Jaring.dom.get(dragElement.platform);
+			this.dragTarget  = Jaring.dom.get(dragElement.container);
 		},
 
 		enable: function(){
@@ -55,6 +56,7 @@
 
 			//console.log(this._newPos);
 			this.dragElement.offset(this._newPos);
+			this.map.refreshLayer();
 		},
 
 		onMouseUp: function(e){

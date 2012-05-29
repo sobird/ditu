@@ -288,7 +288,9 @@ Jaring.maps.Map.addInitHook(function(options) {
 	 */
 	var getTopLeftPoint = function() {
 		//TODO 暂时这样
-		return _self._initial.northWestPoint;
+		//var mapPanePos = L.DomUtil.getPosition(this._mapPane);
+		//return this._initialTopLeftPoint.subtract(mapPanePos);
+		return _self._initial.northWestPoint.subtract(_self.platform.offset().toPoint());
 	};
 
 	this.getPixelCenter = function(){
