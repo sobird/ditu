@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- HOW TODO ! junlong.yang at 2012/05/30 add this file -->
+<project name="Jaring" default="copyfile" basedir="." >
+	<target name="copyfile">
+		<copy file="README" todir="Temp" overwrite="true" />
+	</target>
+</project>
