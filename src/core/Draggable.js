@@ -2,6 +2,45 @@
  * DOM元素 通用拖放 类
  */
 (function() {
+	Jaring.create('Jaring.Draggable extends Jaring.Observable', {
+		Draggable: function(dragElement, dragTarget) {
+			this.map = dragElement;
+			this.dragElement = Jaring.dom.get(dragElement.platform);
+			this.dragTarget = Jaring.dom.get(dragElement.container);
+		},
+
+		/**
+		 * 启用鼠标拖放功能
+		 * 
+		 * @return {Jaring.Draggable} draggable [description]
+		 */
+		enable: function() {
+			if (this.enabled) {
+				//如果已经启用了, 则返回
+				return;
+			}
+
+			//给要拖动的DOM对象添加 mousedown 事件
+			this.dragTarget.on('mousedown', Jaring.util.bind(onMouseDown, this));
+			this.enabled = true;
+		},
+
+		/**
+		 * 禁用鼠标拖放功能
+		 * 
+		 * @return {[type]} [description]
+		 */
+		disable: function() {
+			if (!this.enabled) {
+				//如果未启用, 则返回
+				return;
+			}
+			this.dragTarget.un();
+			this.enabled = false;
+			this.moved = false;
+		}
+	});
+
 	/**
 	 * 鼠标按下 事件处理程序
 	 * 
@@ -47,7 +86,7 @@
 		this.dragElement.offset(this._lastOffset);
 	};
 
-	var onMouseUp = function(e) {
+	var onMouseUp = function(event) {
 
 		Jaring.dom.un(this.dragingListener);
 		Jaring.dom.un(this.dragendListener);
@@ -60,43 +99,4 @@
 		}
 		this.moving = false;
 	};
-
-	Jaring.create('Jaring.Draggable extends Jaring.Observable', {
-		Draggable: function(dragElement, dragTarget) {
-			this.map = dragElement;
-			this.dragElement = Jaring.dom.get(dragElement.platform);
-			this.dragTarget = Jaring.dom.get(dragElement.container);
-		},
-
-		/**
-		 * 启用鼠标拖放功能
-		 * 
-		 * @return {Jaring.Draggable} draggable [description]
-		 */
-		enable: function() {
-			if (this.enabled) {
-				//如果已经启用了, 则返回
-				return;
-			}
-
-			//给要拖动的DOM对象添加 mousedown 事件
-			this.dragTarget.on('mousedown', Jaring.util.bind(onMouseDown, this));
-			this.enabled = true;
-		},
-
-		/**
-		 * 禁用鼠标拖放功能
-		 * 
-		 * @return {[type]} [description]
-		 */
-		disable: function() {
-			if (!this.enabled) {
-				//如果未启用, 则返回
-				return;
-			}
-			this.dragTarget.un();
-			this.enabled = false;
-			this.moved = false;
-		}
-	})
 })();
