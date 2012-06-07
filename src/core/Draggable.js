@@ -4,9 +4,8 @@
 (function() {
 	Jaring.create('Jaring.Draggable extends Jaring.Observable', {
 		Draggable: function(dragElement, dragTarget) {
-			this.map = dragElement;
-			this.dragElement = Jaring.dom.get(dragElement.platform);
-			this.dragTarget = Jaring.dom.get(dragElement.container);
+			this.dragElement = Jaring.dom.get(dragElement);
+			this.dragTarget = Jaring.dom.get(dragTarget);
 		},
 
 		/**
@@ -73,7 +72,7 @@
 		event.preventDefault();
 
 		if (!this.moved) {
-			this.fire('dragstart');
+			this.fire('dragstart', event);
 			this.moved = true;
 		}
 		this.moving = true;
@@ -95,7 +94,7 @@
 		this.dragendListener = null;
 
 		if (this.moved) {
-			this.fire('dragend');
+			this.fire('dragend', event);
 		}
 		this.moving = false;
 	};

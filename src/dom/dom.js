@@ -555,6 +555,11 @@
 			}
 		},
 
+		/**
+		 * 启用页面文本选择
+		 * 
+		 * @return {[type]} [description]
+		 */
 		enableTextSelection: function () {
 			document.onselectstart = this._jaring_onselect_start_;
 			this._jaring_onselect_start_ = null;

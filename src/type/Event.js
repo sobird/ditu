@@ -1,5 +1,5 @@
 /**
- * 地图事件类标准化封装
+ * 事件类标准化封装
  * 
  * @author junlong.yang CrossYou2009@gmail.com
  * @version $Id$
@@ -37,10 +37,10 @@
 
 			this.domTarget = this.trigger = this.target = this.resolveTextNode(event.target || event.srcElement);
 			
-			this.x = this.x();
-			this.y = this.y();
+			this.pageX = this.x();
+			this.pageY = this.y();
 
-			this.point = new Jaring.maps.Point(this.x, this.y);
+			this.point = new Jaring.maps.Point(this.pageX, this.pageY);
 
 			if (event.type == "DOMMouseScroll") {
 				this.type = "mousewheel";

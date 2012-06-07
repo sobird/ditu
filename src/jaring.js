@@ -1,9 +1,8 @@
 /**
  * Jaring NameSpace
- * 
- * @param  {[type]} Jaring [description]
- * @param  {[type]} win    [description]
- * @return {[type]}        [description]
+ *
+ * @author junlong.yang crossyou2009@gmail.com
+ * @version $Id$
  */
 (function(Jaring, win){
 	win.Jaring = win.Jaring || Jaring;
@@ -18,5 +17,6 @@
 
 		falseFn: function(){
 			return false;
-		}
+		},
+		emptyImg: 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
 	},window);

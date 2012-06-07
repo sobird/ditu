@@ -7,7 +7,7 @@
 		 */
 		__array: [],
 
-		MVCArray: function(){
+		MVCArray: function(array){
 			this.__array = array || [];
 			this.set('length',this.__array.length);
 		},

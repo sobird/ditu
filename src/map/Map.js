@@ -8,13 +8,6 @@
 		_hooks: [],
 
 		/**
-		 * 地图初始属性值
-		 *
-		 * @type {Object}
-		 */
-		_initial: {},
-
-		/**
 		 * 地图各个阶段的状态值
 		 *
 		 * @type {Number}
@@ -27,6 +20,41 @@
 		 */
 		Map: function(container, options) {
 			this.phase = 0;
+
+			var defaults = {
+					/**
+					 * 该地图所使用的 参考坐标系
+					 *
+					 * @type {CRS}
+					 */
+					CRS: Jaring.CRS.EPSG3857,
+
+					/**
+					 * 地图背景颜色
+					 *
+					 * @type {String}
+					 */
+					backgroundColor: '#ccc',
+
+					mixZoom: 3,
+
+					maxZoom: 18,
+
+					zoom: 16,
+
+					/**
+					 * 地图中心点坐标
+					 *
+					 * @type {LngLat}
+					 */
+					center: new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627),
+
+					draggable: true,
+
+				};
+
+			this.options = Jaring.util.extend({}, defaults, options);
+			
 			/**
 			 * 地图容器初始化: Map Container
 			 *
@@ -34,7 +62,13 @@
 			 */
 			this.container = Jaring.dom.get(container);
 
+			/**
+			 * 地图容器大小
+			 * 
+			 * @type {Jaring.maps.Size}
+			 */
 			this.size = this.container.size();
+
 			this.halfSize = this.size.divideBy(2);
 
 
@@ -222,6 +256,7 @@
 			}
 		},
 
+		//Map类的静态方法, 可在此处添加
 		'static': {
 			/**
 			 * Map Class Hook static method
@@ -242,41 +277,16 @@
 	});
 })();
 
-//添加地图的第一个钩子
+/**
+ * 添加地图初始化的第一个钩子
+ * 控制Map类的成员的可访问性
+ *
+ * @since 1.0.0
+ * @param  {Hook} hook [description]
+ * @return {None} none [description]
+ */
 Jaring.maps.Map.addInitHook(function(options) {
-	var _self = this,
-
-		defaults = { //这个是有先后顺序的
-			/**
-			 * 该地图所使用的 参考坐标系
-			 *
-			 * @type {CRS}
-			 */
-			CRS: Jaring.CRS.EPSG3857,
-
-			/**
-			 * 地图背景颜色
-			 *
-			 * @type {String}
-			 */
-			backgroundColor: '#ccc',
-
-			mixZoom: 3,
-
-			maxZoom: 18,
-
-			zoom: 16,
-
-			/**
-			 * 地图中心点坐标
-			 *
-			 * @type {LngLat}
-			 */
-			center: new Jaring.maps.LngLat(116.39712896958922, 39.9165275426627),
-
-			draggable: true,
-
-		};
+	var _self = this;
 
 	/**
 	 * 获取当前地图视图左上角的地理像素坐标
@@ -287,13 +297,18 @@ Jaring.maps.Map.addInitHook(function(options) {
 	 * @return {Jaring.maps.Point} point [description]
 	 */
 	var getTopLeftPoint = function() {
-		//TODO 暂时这样
-		//var mapPanePos = L.DomUtil.getPosition(this._mapPane);
-		//return this._initialTopLeftPoint.subtract(mapPanePos);
-		return _self._initial.northWestPoint.subtract(_self.platform.offset().toPoint());
+		return _self.options.northWestPoint.subtract(_self.platform.offset().toPoint());
 	};
 
+	/**
+	 * 获取当前地图中心点的地理像素坐标
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @return {[type]} [description]
+	 */
 	this.getPixelCenter = function(){
+		//地图中心点地理坐标 = 地图左上方的地理像素坐标 + 当前地图容器大小的一半px
 		return getTopLeftPoint().plus(this.halfSize.toPoint());
 	},
 
@@ -314,18 +329,16 @@ Jaring.maps.Map.addInitHook(function(options) {
 	this.onCenterChanged = function(event) {
 		if (Jaring.util.is(event.oldValue, 'undefined')) {
 			//TODO 地图第一次加载, 中心点相关的初始化工作
-			var initial = this._initial;
+			var options = this.options;
 
-			initial.center = this.center;
-			initial.zoom = this.zoom;
+			//地图初始化时的中心点地理像素坐标
+			options.pixelCenter = this.fromLngLatToPixel(options.center);
 
-			initial.pixelCenter = this.fromLngLatToPixel(initial.center);
+			options.northWestPoint = options.pixelCenter.subtract(this.size.divideBy(2).toPoint());
+			options.southEastPoint = options.northWestPoint.plus(this.size.toPoint());
 
-			initial.northWestPoint = initial.pixelCenter.subtract(this.size.divideBy(2).toPoint());
-			initial.southEastPoint = initial.northWestPoint.plus(this.size.toPoint());
-
-			initial.southWestLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.northWestPoint.x, initial.southEastPoint.y), this.zoom, true);
-			initial.northEastLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(initial.southEastPoint.x, initial.northWestPoint.y), this.zoom, true);
+			options.southWestLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(options.northWestPoint.x, options.southEastPoint.y), this.zoom, true);
+			options.northEastLngLat = this.fromPixelToLngLat(new Jaring.maps.Point(options.southEastPoint.x, options.northWestPoint.y), this.zoom, true);
 
 			this.phase = 2;
 		}
@@ -346,5 +359,5 @@ Jaring.maps.Map.addInitHook(function(options) {
 
 
 	//为地图设置 options 属性值
-	this.setValues(Jaring.util.extend({}, defaults, options));
+	this.setValues(this.options);
 });

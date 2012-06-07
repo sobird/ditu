@@ -1,3 +1,9 @@
+/**
+ * 来自谷歌(Google)的一个MVCObject类
+ *
+ * @extends {Jaring.Observable}
+ * @return {[type]} [description]
+ */
 (function(){
 	var firstLetterUpperList = {};
 	Jaring.create('Jaring.MVCObject extends Jaring.Observable',{

@@ -20,7 +20,7 @@
 
 		init: function(layerMgr){
 			this.layerMgr = layerMgr;
-			this.initialNorthWestPoint = this.layerMgr.map._initial.northWestPoint;
+			this.initialNorthWestPoint = this.layerMgr.map.options.northWestPoint;
 			this.container = Jaring.dom.create('div').addClass('jaring-layer-base').appendTo(this.layerMgr.container);
 		},
 
