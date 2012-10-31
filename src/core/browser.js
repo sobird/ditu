@@ -77,6 +77,12 @@
 		 */
 		idevice: /(iPad|iPhone)/.test(ua),
 
+		/**
+		 * Constant that tells if the current browser is an android.
+		 * 
+		 * @type {Boolean}
+		 * @final
+		 */
 		android: ua.indexOf("android") !== -1,
 
 		touch: (function () {
