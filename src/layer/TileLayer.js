@@ -5,7 +5,7 @@
 	Jaring.create('Jaring.maps.TileLayer extends Jaring.maps.BaseLayer', {
 		TileLayer: function(options) {
 			var defaults = {
-				tileUrlTemplate: 'http://dev.crossyou.cn/misc/map/x={x};y={y};z={z};type=web;for=jaring',
+				tileUrlTemplate: 'https://mts3.google.com/vt/x={x}&y={y}&z={z}&type=web&for=jaring',
 				tileSubdomains: '123',
 				opacity: 1,
 				minZoom: 3,
