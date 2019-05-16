@@ -22,6 +22,8 @@
 			//给要拖动的DOM对象添加 mousedown 事件
 			this.dragTarget.on('mousedown', Jaring.util.bind(onMouseDown, this));
 			this.enabled = true;
+
+			return this;
 		},
 
 		/**
@@ -37,6 +39,8 @@
 			this.dragTarget.un();
 			this.enabled = false;
 			this.moved = false;
+
+			return this;
 		}
 	});
 
@@ -58,7 +62,7 @@
 		}
 
 		this._startOffset = this._lastOffset = this.dragElement.offset();
-		this._startPoint = new Jaring.maps.Point(event.x, event.y);
+		this._startPoint = new Jaring.maps.Point(event.x(), event.y());
 
 
 		//给document添加 mousemove 和 mouseup 事件处理程序
@@ -77,11 +81,10 @@
 		}
 		this.moving = true;
 
-		var deltaOffset = new Jaring.maps.Point(event.x, event.y).subtract(this._startPoint).toOffset();
+		var deltaOffset = new Jaring.maps.Point(event.x(), event.y()).subtract(this._startPoint).toOffset();
 
 		this._lastOffset = this._startOffset.plus(deltaOffset);
 
-		//console.log(this._newPos);
 		this.dragElement.offset(this._lastOffset);
 	};
 
