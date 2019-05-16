@@ -43,9 +43,10 @@
 	require('jaring.js');
 
 	//Core 核心文件
+	require('core/browser.js');
 	require('core/constant.js');
 	require('core/util.js');
-	require('core/browser.js');
+	
 	require('core/event.js');
 	require('core/Observable.js');
 	require('core/MVCObject.js');

@@ -20,7 +20,7 @@
 			}
 
 			//给要拖动的DOM对象添加 mousedown 事件
-			this.dragTarget.on('mousedown', Jaring.util.bind(onMouseDown, this));
+			this.dragTarget.on(Jaring.constant.EVENT_NAME.MOUSE_DOWN, Jaring.util.bind(onMouseDown, this));
 			this.enabled = true;
 
 			return this;
@@ -66,8 +66,8 @@
 
 
 		//给document添加 mousemove 和 mouseup 事件处理程序
-		this.dragingListener = Jaring.dom.on(document, 'mousemove', Jaring.util.bind(onMouseMove, this));
-		this.dragendListener = Jaring.dom.on(document, 'mouseup',   Jaring.util.bind(onMouseUp,   this));
+		this.dragingListener = Jaring.dom.on(document, Jaring.constant.EVENT_NAME.MOUSE_MOVE, Jaring.util.bind(onMouseMove, this));
+		this.dragendListener = Jaring.dom.on(document, Jaring.constant.EVENT_NAME.MOUSE_UP,   Jaring.util.bind(onMouseUp,   this));
 	};
 
 	var onMouseMove = function(event) {

@@ -17,6 +17,9 @@
 		Event: function(event){
 			var event = event || window.event;
 			this.originalEvent = event;
+			if(event.touches) {
+			  this.originalEvent = event.touches[0];
+			}
 			Jaring.util.extendIf(this, event);
 
 			//事件属性 兼容 ~~
@@ -37,8 +40,8 @@
 
 			this.domTarget = this.trigger = this.target = this.resolveTextNode(event.target || event.srcElement);
 			
-			this.pageX = this.x();
-			this.pageY = this.y();
+			//this.pageX = this.x();
+			//this.pageY = this.y();
 
 			this.point = new Jaring.maps.Point(this.pageX, this.pageY);
 
