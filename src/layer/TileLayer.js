@@ -1,3 +1,17 @@
+/**
+ * http://mt2.google.cn/vt/lyrs=y&scale=2&hl=zh-CN&gl=cn&x=6891&y=3040&z=13
+ *
+ * h 街道图
+ * m 街道图
+ * p 街道图
+ * r 街道图
+ * s 影像无标注
+ * t 地形图
+ * y 影像含标注
+ * 
+ * @author  Yang,junlong at 2019-05-17 01:05:16 build.
+ * @version $Id$
+ */
 (function() {
 	/**
 	 * 这是图层的基础类
@@ -5,7 +19,7 @@
 	Jaring.create('Jaring.maps.TileLayer extends Jaring.maps.BaseLayer', {
 		TileLayer: function(options) {
 			var defaults = {
-				tileUrlTemplate: 'https://mts3.google.com/vt/x={x}&y={y}&z={z}&type=web&for=jaring',
+				tileUrlTemplate: 'https://mt3.google.cn/vt/scale=2&x={x}&y={y}&z={z}&type=web&for=jaring',
 				tileSubdomains: '123',
 				opacity: 1,
 				minZoom: 3,
